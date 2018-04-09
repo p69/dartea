@@ -9,7 +9,7 @@ part 'src/types.dart';
 part 'src/cmd.dart';
 part 'src/widget.dart';
 
-/// Class for managing app cycle
+/// Entry point to the Dartea application
 class Program<TArg, TModel, TMsg> {
   final Init<TArg, TModel, TMsg> init;
   final Update<TModel, TMsg> update;
@@ -24,16 +24,16 @@ class Program<TArg, TModel, TMsg> {
       Init<TArg, TModel, TMsg> init,
       Update<TModel, TMsg> update,
       View<TModel, TMsg> view) {
-    return new Program(init, update, ((_) => const Cmd.none()), view,
-        ((d, e) => debugPrint("Program loop: $d $e")));
+    return new Program(init, update, (_) => Cmd.none, view,
+        (d, e) => debugPrint("Program loop: $d $e"));
   }
 
   static Program<Null, TModel, TMsg> mkSimple<TModel, TMsg>(
       Init<Null, TModel, TMsg> init,
       Update<TModel, TMsg> update,
       View<TModel, TMsg> view) {
-    return new Program(init, update, ((_) => const Cmd.none()), view,
-        ((d, e) => debugPrint("Program loop: $d $e")));
+    return new Program(init, update, (_) => Cmd.none, view,
+        (d, e) => debugPrint("Program loop: $d $e"));
   }
 
   Program<TArg, TModel, TMsg> copyWith(
@@ -50,7 +50,7 @@ class Program<TArg, TModel, TMsg> {
         onError ?? this.onError);
   }
 
-  void runWith<T extends Widget>(RunApp runApp, TArg arg) {
+  void runWith<T extends Widget>(RenderView runApp, TArg arg) {
     var initial = init(arg);
     var initialModel = initial.model;
     var initialEffects = new List<Sub>();

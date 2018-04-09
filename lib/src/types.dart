@@ -1,37 +1,42 @@
 part of dartea;
 
-typedef Dispatch<TMsg> = void Function(
-    TMsg msg); //function for sending messages in runtime loop
-typedef Sub<TMsg> = void Function(
-    Dispatch<TMsg> dispatch); //callback for side-effects
+/// function for sending messages into the program loop
+typedef Dispatch<TMsg> = void Function(TMsg msg);
 
-typedef Init<TArg, TModel, TMsg> = UpdateResult<TModel, TMsg> Function(
-    TArg params); //function for initializing model
+/// callback for side-effects
+typedef Sub<TMsg> = void Function(Dispatch<TMsg> dispatch);
 
-typedef View<TModel, TMsg> = Widget Function(BuildContext ctx,
-    Dispatch<TMsg> dispatch, TModel model); //function for rendering UI
+/// function for initializing model
+typedef Init<TArg, TModel, TMsg> = Upd<TModel, TMsg> Function(TArg params);
 
-typedef OnError = void Function(String description,
-    Exception exception); //function for error handling in runtime loop
+/// function for creating widgets tree
+typedef View<TModel, TMsg> = Widget Function(
+    BuildContext ctx, Dispatch<TMsg> dispatch, TModel model);
 
-typedef Update<TModel, TMsg> = UpdateResult<TModel, TMsg> Function(
-    TMsg msg, TModel model); //function for updating state(model)
+/// function for error handling in runtime loop
+typedef OnError = void Function(String description, Exception exception);
 
-typedef Subscribe<TModel, TMsg> = Cmd<TMsg> Function(
-    TModel model); //function for subsrcibing on external sources
+/// function for updating state(model)
+typedef Update<TModel, TMsg> = Upd<TModel, TMsg> Function(
+    TMsg msg, TModel model);
 
-typedef RunApp = void Function(Widget root); //factory for host widget
+/// function for subsrcibing on external sources
+typedef Subscribe<TModel, TMsg> = Cmd<TMsg> Function(TModel model);
 
-class UpdateResult<TModel, TMsg> {
+/// function for render created widgets tree (typicaly through runApp)
+typedef RenderView = void Function(Widget root);
+
+/// Simple tuple of Model*Cmds (for init or update functions)
+class Upd<TModel, TMsg> {
   final TModel model;
   final Cmd<TMsg> effects;
-  UpdateResult(this.model, {this.effects = const Cmd.none()});
+  Upd(this.model, {this.effects = Cmd.none});
 }
 
-class UpdateChildResult<TModel, TMsg, TParentMsg> {
+/// The same as [Upd] but with addional messages for communication child with parent
+class UpdChild<TModel, TMsg, TParentMsg> {
   final TModel model;
   final Cmd<TMsg> effects;
   final List<TParentMsg> toParent;
-  UpdateChildResult(this.model,
-      {this.effects = const Cmd.none(), this.toParent = const []});
+  UpdChild(this.model, {this.effects = Cmd.none, this.toParent = const []});
 }

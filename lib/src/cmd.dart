@@ -1,10 +1,13 @@
 part of dartea;
 
+/// Class for contorlling side-effetcs.
 class Cmd<TMsg> extends DelegatingList<Sub<TMsg>> {
   Cmd(List<Sub<TMsg>> base) : super(base);
   Cmd.ofMsg(TMsg msg) : super([(dispatch) => dispatch(msg)]);
   Cmd.ofSub(Sub<TMsg> sub) : super([sub]);
-  const Cmd.none() : super(const []);
+  const Cmd._() : super(const []);
+
+  static const Cmd none = const Cmd._();
 
   static Cmd<TMsg> ofFutureFuncWithArg<TArg, TResult, TMsg>(
       Future<TResult> func(TArg a),
@@ -68,5 +71,6 @@ class Cmd<TMsg> extends DelegatingList<Sub<TMsg>> {
     return new Cmd(mapped);
   }
 
-  static Cmd<TMsg> batch<TMsg>(List<Cmd<TMsg>> cmds) => new Cmd(cmds.expand((x)=>x).toList());
+  static Cmd<TMsg> batch<TMsg>(List<Cmd<TMsg>> cmds) =>
+      new Cmd(cmds.expand((x) => x).toList());
 }

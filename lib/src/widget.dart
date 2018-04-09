@@ -1,7 +1,7 @@
 part of dartea;
 
 class DarteaAppWidget<TModel, TMsg> extends StatelessWidget {
-  static const rootKey = const Key('flip_flop_root_widget');
+  static const rootKey = const Key('dartea_root_widget');
 
   final TModel _model;
   final View<TModel, TMsg> _view;

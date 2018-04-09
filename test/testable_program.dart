@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 
 class TestProgram<TArg, TModel, TMsg> {
   Program<TArg, TModel, TMsg> _program;
-  final StreamController<TMsg> _updateController = new StreamController(sync: true);
-  final StreamController<TModel> _viewController = new StreamController(sync: true);
+  final _updateController = new StreamController<TMsg>(sync: true);
+  final _viewController = new StreamController<TModel>(sync: true);
   List<Widget> frames = new List<Widget>();
 
   TestProgram(Init<TArg, TModel, TMsg> init, Update<TModel, TMsg> update,

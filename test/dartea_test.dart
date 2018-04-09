@@ -18,12 +18,7 @@ void main() {
     await tester.pumpWidget(lastFrame);
 
     expect(program.views,
-         emitsInOrder([predicate((Model m) => m.counter == initArg)]));
+        emitsInOrder([predicate((Model m) => m.counter == initArg)]));
     expect(find.text(initArg.toString()), findsOneWidget);
   });
-
 }
-
-
-
-

@@ -12,17 +12,16 @@ class Increment implements Message {}
 
 class Decrement implements Message {}
 
-UpdateResult<Model, Message> init(int start) =>
-    new UpdateResult(new Model(counter: start));
+Upd<Model, Message> init(int start) => new Upd(new Model(counter: start));
 
-UpdateResult<Model, Message> update(Message msg, Model model) {
+Upd<Model, Message> update(Message msg, Model model) {
   if (msg is Increment) {
-    return new UpdateResult(new Model(counter: model.counter + 1));
+    return new Upd(new Model(counter: model.counter + 1));
   }
   if (msg is Decrement) {
-    return new UpdateResult(new Model(counter: model.counter - 1));
+    return new Upd(new Model(counter: model.counter - 1));
   }
-  return new UpdateResult(model);
+  return new Upd(model);
 }
 
 const incrementKey = const Key("");
