@@ -50,7 +50,7 @@ class Program<TArg, TModel, TMsg> {
         onError ?? this.onError);
   }
 
-  void runWith<T extends Widget>(RenderView runApp, TArg arg) {
+  void runWith<T extends Widget>(RenderView render, TArg arg) {
     var initial = init(arg);
     var initialModel = initial.model;
     var initialEffects = new List<Sub>();
@@ -68,7 +68,7 @@ class Program<TArg, TModel, TMsg> {
         var updates = update(msg, currentModel);
         currentModel = updates.model;
         root = new DarteaAppWidget(dispatch, view, currentModel);
-        runApp(root);
+        render(root);
         for (var effect in updates.effects) {
           effect(dispatch);
         }
@@ -77,7 +77,7 @@ class Program<TArg, TModel, TMsg> {
       }
     });
 
-    runApp(root);
+    render(root);
     initialEffects.addAll(subscribe(currentModel));
     initialEffects.forEach((effect) => effect(dispatch));
   }

@@ -24,7 +24,8 @@ Upd<Model, Message> update(Message msg, Model model) {
   return new Upd(model);
 }
 
-const incrementKey = const Key("");
+const incrementBtnKey = const Key("incremet");
+const decrementBtnKey = const Key("decremet");
 
 Widget view(BuildContext ctx, Dispatch<Message> d, Model m) {
   return new Column(
@@ -34,9 +35,11 @@ Widget view(BuildContext ctx, Dispatch<Message> d, Model m) {
           child: new Row(
         children: <Widget>[
           new RaisedButton(
-              onPressed: () => d(new Increment()),
-              child: new Text("increment")),
+            key: incrementBtnKey,
+            onPressed: () => d(new Increment()),
+            child: new Text("increment")),
           new RaisedButton(
+            key: decrementBtnKey,
             onPressed: () => d(new Decrement()),
             child: new Text("decrement"),
           )
