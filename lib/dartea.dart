@@ -20,16 +20,8 @@ class Program<TArg, TModel, TMsg> {
 
   Program(this.init, this.update, this.subscribe, this.view, this.onError);
 
-  static Program<TArg, TModel, TMsg> mkSimpleWithArgs<TArg, TModel, TMsg>(
+  static Program<TArg, TModel, TMsg> mkSimple<TArg, TModel, TMsg>(
       Init<TArg, TModel, TMsg> init,
-      Update<TModel, TMsg> update,
-      View<TModel, TMsg> view) {
-    return new Program(init, update, (_) => Cmd.none, view,
-        (d, e) => debugPrint("Program loop: $d $e"));
-  }
-
-  static Program<Null, TModel, TMsg> mkSimple<TModel, TMsg>(
-      Init<Null, TModel, TMsg> init,
       Update<TModel, TMsg> update,
       View<TModel, TMsg> view) {
     return new Program(init, update, (_) => Cmd.none, view,
