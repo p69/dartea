@@ -9,54 +9,57 @@ class Cmd<TMsg> extends DelegatingList<Sub<TMsg>> {
 
   static Cmd<TMsg> ofFutureFuncWithArg<TArg, TResult, TMsg>(
       Future<TResult> func(TArg a),
-      TMsg onSuccess(TResult r),
+      {@required TMsg onSuccess(TResult r),
       TMsg onError(Exception e),
-      TArg arg) {
+      @required TArg arg}) {
     return new Cmd.ofSub((disptach) async {
       try {
         var result = await func(arg);
         disptach(onSuccess(result));
       } on Exception catch (ex) {
-        disptach(onError(ex));
+        if (onError != null) {
+          disptach(onError(ex));
+        }
       }
     });
   }
 
   static Cmd<TMsg> ofFutureFunc<TResult, TMsg>(Future<TResult> func(),
-      TMsg onSuccess(TResult r), TMsg onError(Exception e)) {
+      {@required TMsg onSuccess(TResult r), TMsg onError(Exception e)}) {
     return new Cmd.ofSub((disptach) async {
       try {
         var result = await func();
         disptach(onSuccess(result));
       } on Exception catch (ex) {
-        disptach(onError(ex));
+        if (onError != null) {
+          disptach(onError(ex));
+        }
       }
     });
   }
 
-  static Cmd<TMsg> performFunc<TResult, TMsg>(
-      Future<TResult> func(), TMsg onSuccess(TResult r)) {
-    return new Cmd.ofSub((disptach) async {
-      try {
-        var result = await func();
-        disptach(onSuccess(result));
-      } on Exception catch (_) {}
-    });
-  }
-
-  static Cmd performAction(void action()) {
-    return new Cmd.ofSub((disptach) async {
+  static Cmd<TMsg> ofAction<TMsg>(void action(), {TMsg onError(Exception e)}) {
+    return new Cmd.ofSub((Dispatch<TMsg> disptach) async {
       try {
         action();
-      } on Exception catch (_) {}
+      } on Exception catch (e) {
+        if (onError != null) {
+          disptach(onError(e));
+        }
+      }
     });
   }
 
-  static Cmd performTask(Future task()) {
+  static Cmd<TMsg> ofFutureAction<TMsg>(Future action(),
+      {TMsg onError(Exception e)}) {
     return new Cmd.ofSub((disptach) async {
       try {
-        await task();
-      } on Exception catch (_) {}
+        await action();
+      } on Exception catch (e) {
+        if (onError != null) {
+          disptach(onError(e));
+        }
+      }
     });
   }
 
