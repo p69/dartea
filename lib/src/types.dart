@@ -30,7 +30,7 @@ typedef RenderView = void Function(Widget root);
 class Upd<TModel, TMsg> {
   final TModel model;
   final Cmd<TMsg> effects;
-  Upd(this.model, {this.effects = Cmd.none});
+  Upd(this.model, {this.effects = const Cmd.none()});
 }
 
 /// The same as [Upd] but with addional messages for communication child with parent
@@ -38,5 +38,6 @@ class UpdChild<TModel, TMsg, TParentMsg> {
   final TModel model;
   final Cmd<TMsg> effects;
   final List<TParentMsg> toParent;
-  UpdChild(this.model, {this.effects = Cmd.none, this.toParent = const []});
+  UpdChild(this.model,
+      {this.effects = const Cmd.none(), this.toParent = const []});
 }

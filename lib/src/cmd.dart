@@ -5,9 +5,7 @@ class Cmd<TMsg> extends DelegatingList<Sub<TMsg>> {
   Cmd(List<Sub<TMsg>> base) : super(base);
   Cmd.ofMsg(TMsg msg) : super([(dispatch) => dispatch(msg)]);
   Cmd.ofSub(Sub<TMsg> sub) : super([sub]);
-  const Cmd._() : super(const []);
-
-  static const Cmd none = const Cmd._();
+  const Cmd.none() : super(const []);
 
   static Cmd<TMsg> ofFutureFuncWithArg<TArg, TResult, TMsg>(
       Future<TResult> func(TArg a),

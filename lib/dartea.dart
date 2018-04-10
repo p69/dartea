@@ -24,7 +24,7 @@ class Program<TArg, TModel, TMsg> {
       Init<TArg, TModel, TMsg> init,
       Update<TModel, TMsg> update,
       View<TModel, TMsg> view) {
-    return new Program(init, update, (_) => Cmd.none, view,
+    return new Program(init, update, (_) => const Cmd.none(), view,
         (d, e) => debugPrint("Program loop: $d $e"));
   }
 
