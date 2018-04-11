@@ -8,7 +8,7 @@ import 'testable_program.dart';
 import 'counter_app.dart';
 
 void main() {
-  group('pure', () {
+  group('main functions', () {
     TestProgram<int, Model, Message> program;
 
     setUp(() {
@@ -59,107 +59,5 @@ void main() {
           find.text((initArg + incrementsCount - decrementsCount).toString()),
           findsOneWidget);
     });
-  });
-
-  group('effects', () {
-    StreamController<String> effectsController;
-
-    setUp(() {
-      effectsController = new StreamController<String>();
-    });
-
-    testWidgets('message cmd', (WidgetTester tester) async {
-      var initArg = 0;
-      var effect = Cmd.ofMsg(Increment());
-      var program =
-          TestProgram((start) => init(start, effect: effect), update, view);
-      program.runWith(initArg);
-
-      await tester.pumpWidget(program.frames.removeLast());
-      await tester.tap(find.byKey(incrementBtnKey));
-      await tester.tap(find.byKey(effectBtnKey));
-      await tester.pumpWidget(program.frames.removeLast());
-
-      expect(
-          program.updates,
-          emitsInOrder([
-            predicate((Message m) => m is Increment),
-            predicate((Message m) => m is DoSideEffect),
-            predicate((Message m) => m is Increment)
-          ]));
-      expect(find.text((initArg + 1 + 1).toString()), findsOneWidget);
-    });
-
-    testWidgets('cmd of sub', (WidgetTester tester) async {
-      var initArg = 0;
-      var effect =
-          Cmd.ofSub((Dispatch<Message> dispatch) => dispatch(Increment()));
-      var program =
-          TestProgram((start) => init(start, effect: effect), update, view);
-      program.runWith(initArg);
-
-      await tester.pumpWidget(program.frames.removeLast());
-      await tester.tap(find.byKey(incrementBtnKey));
-      await tester.tap(find.byKey(effectBtnKey));
-      await tester.pumpWidget(program.frames.removeLast());
-
-      expect(
-          program.updates,
-          emitsInOrder([
-            predicate((Message m) => m is Increment),
-            predicate((Message m) => m is DoSideEffect),
-            predicate((Message m) => m is Increment)
-          ]));
-      expect(find.text((initArg + 1 + 1).toString()), findsOneWidget);
-    });
-
-    testWidgets('none cmd', (WidgetTester tester) async {
-      var initArg = 0;
-      Cmd<Message> effect = Cmd.none();
-      var program =
-          TestProgram((start) => init(start, effect: effect), update, view);
-      program.runWith(initArg);
-
-      await tester.pumpWidget(program.frames.removeLast());
-      await tester.tap(find.byKey(incrementBtnKey));
-      await tester.tap(find.byKey(effectBtnKey));
-      await tester.pumpWidget(program.frames.removeLast());
-
-      expect(
-          program.updates,
-          emitsInOrder([
-            predicate((Message m) => m is Increment),
-            predicate((Message m) => m is DoSideEffect)
-          ]));
-      expect(find.text((initArg + 1).toString()), findsOneWidget);
-    });
-
-    testWidgets('cmd of action (success)', (WidgetTester tester) async {
-      var initArg = 0;
-      var sideEffect = "side effect!";
-      var effect =
-          Cmd.ofAction<Message>(() => effectsController.add(sideEffect));
-      var program =
-          TestProgram((start) => init(start, effect: effect), update, view);
-      program.runWith(initArg);
-
-      await tester.pumpWidget(program.frames.removeLast());
-      await tester.tap(find.byKey(incrementBtnKey));
-      await tester.tap(find.byKey(effectBtnKey));
-      await tester.tap(find.byKey(effectBtnKey));
-      await tester.pumpWidget(program.frames.removeLast());
-
-      expect(
-          program.updates,
-          emitsInOrder([
-            predicate((Message m) => m is Increment),
-            predicate((Message m) => m is DoSideEffect),
-            predicate((Message m) => m is DoSideEffect)
-          ]));
-      expect(effectsController.stream, emitsInOrder([sideEffect]));
-      expect(find.text((initArg + 1).toString()), findsOneWidget);
-    });
-
-
   });
 }

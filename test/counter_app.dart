@@ -17,6 +17,13 @@ class Decrement implements Message {}
 
 class DoSideEffect implements Message {}
 
+class ErrorMessage implements Message {
+  final String message;
+  ErrorMessage(this.message);
+}
+
+class OnSuccessEffect implements Message {}
+
 Upd<Model, Message> init(int start, {Cmd<Message> effect}) =>
     new Upd(new Model(counter: start, effect: effect));
 

@@ -7,10 +7,14 @@ class Cmd<TMsg> extends DelegatingList<Sub<TMsg>> {
   Cmd.ofSub(Sub<TMsg> sub) : super([sub]);
   const Cmd.none() : super(const []);
 
-  static Cmd<TMsg> ofAction<TMsg>(void action(), {TMsg onError(Exception e)}) {
+  static Cmd<TMsg> ofAction<TMsg>(void action(),
+      {TMsg onSuccess(), TMsg onError(Exception e)}) {
     return new Cmd.ofSub((Dispatch<TMsg> disptach) async {
       try {
         action();
+        if (onSuccess != null) {
+          disptach(onSuccess());
+        }
       } on Exception catch (e) {
         if (onError != null) {
           disptach(onError(e));
@@ -20,10 +24,13 @@ class Cmd<TMsg> extends DelegatingList<Sub<TMsg>> {
   }
 
   static Cmd<TMsg> ofAction1<TMsg, TArg>(void action(TArg arg), TArg arg,
-      {TMsg onError(Exception e)}) {
+      {TMsg onSuccess(), TMsg onError(Exception e)}) {
     return new Cmd.ofSub((Dispatch<TMsg> disptach) async {
       try {
         action(arg);
+        if (onSuccess != null) {
+          disptach(onSuccess());
+        }
       } on Exception catch (e) {
         if (onError != null) {
           disptach(onError(e));
@@ -34,10 +41,13 @@ class Cmd<TMsg> extends DelegatingList<Sub<TMsg>> {
 
   static Cmd<TMsg> ofAction2<TMsg, TArg1, TArg2>(
       void action(TArg1 arg1, TArg2 arg2), TArg1 arg1, TArg2 arg2,
-      {TMsg onError(Exception e)}) {
+      {TMsg onSuccess(), TMsg onError(Exception e)}) {
     return new Cmd.ofSub((Dispatch<TMsg> disptach) async {
       try {
         action(arg1, arg2);
+        if (onSuccess != null) {
+          disptach(onSuccess());
+        }
       } on Exception catch (e) {
         if (onError != null) {
           disptach(onError(e));
@@ -51,10 +61,14 @@ class Cmd<TMsg> extends DelegatingList<Sub<TMsg>> {
       TArg1 arg1,
       TArg2 arg2,
       TArg3 arg3,
-      {TMsg onError(Exception e)}) {
+      {TMsg onSuccess(),
+      TMsg onError(Exception e)}) {
     return new Cmd.ofSub((Dispatch<TMsg> disptach) async {
       try {
         action(arg1, arg2, arg3);
+        if (onSuccess != null) {
+          disptach(onSuccess());
+        }
       } on Exception catch (e) {
         if (onError != null) {
           disptach(onError(e));
@@ -64,10 +78,13 @@ class Cmd<TMsg> extends DelegatingList<Sub<TMsg>> {
   }
 
   static Cmd<TMsg> ofFutureAction<TMsg>(Future action(),
-      {TMsg onError(Exception e)}) {
+      {TMsg onSuccess(), TMsg onError(Exception e)}) {
     return new Cmd.ofSub((disptach) async {
       try {
         await action();
+        if (onSuccess != null) {
+          disptach(onSuccess());
+        }
       } on Exception catch (e) {
         if (onError != null) {
           disptach(onError(e));
@@ -78,10 +95,13 @@ class Cmd<TMsg> extends DelegatingList<Sub<TMsg>> {
 
   static Cmd<TMsg> ofFutureAction1<TMsg, TArg>(
       Future action(TArg arg), TArg arg,
-      {TMsg onError(Exception e)}) {
+      {TMsg onSuccess(), TMsg onError(Exception e)}) {
     return new Cmd.ofSub((disptach) async {
       try {
         await action(arg);
+        if (onSuccess != null) {
+          disptach(onSuccess());
+        }
       } on Exception catch (e) {
         if (onError != null) {
           disptach(onError(e));
@@ -92,10 +112,13 @@ class Cmd<TMsg> extends DelegatingList<Sub<TMsg>> {
 
   static Cmd<TMsg> ofFutureAction2<TMsg, TArg1, TArg2>(
       Future action(TArg1 arg1, TArg2 arg2), TArg1 arg1, TArg2 arg2,
-      {TMsg onError(Exception e)}) {
+      {TMsg onSuccess(), TMsg onError(Exception e)}) {
     return new Cmd.ofSub((disptach) async {
       try {
         await action(arg1, arg2);
+        if (onSuccess != null) {
+          disptach(onSuccess());
+        }
       } on Exception catch (e) {
         if (onError != null) {
           disptach(onError(e));
@@ -109,10 +132,14 @@ class Cmd<TMsg> extends DelegatingList<Sub<TMsg>> {
       TArg1 arg1,
       TArg2 arg2,
       TArg3 arg3,
-      {TMsg onError(Exception e)}) {
+      {TMsg onSuccess(),
+      TMsg onError(Exception e)}) {
     return new Cmd.ofSub((disptach) async {
       try {
         await action(arg1, arg2, arg3);
+        if (onSuccess != null) {
+          disptach(onSuccess());
+        }
       } on Exception catch (e) {
         if (onError != null) {
           disptach(onError(e));
