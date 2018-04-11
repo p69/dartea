@@ -59,5 +59,26 @@ void main() {
           find.text((initArg + incrementsCount - decrementsCount).toString()),
           findsOneWidget);
     });
+
+    testWidgets('subscribe', (WidgetTester tester) async {
+      final initArg = 0;
+      var externalSource = new StreamController<Message>();
+      Cmd<Message> subscribe(Model model) =>
+          Cmd.ofSub((Dispatch<Message> dispatch) {
+            externalSource.stream.listen((m) => dispatch(m));
+          });
+      program.withSubscribe(subscribe);
+      program.runWith(initArg);
+
+      await tester.pumpWidget(program.frames.removeLast());
+      int incrementsCount = 5;
+      var updateMatchers = new List<Matcher>();
+      for (var i = 0; i < incrementsCount; i++) {
+        externalSource.add(Increment());
+        updateMatchers.add(predicate((Message m) => m is Increment));
+      }
+
+      expect(program.updates, emitsInOrder(updateMatchers));
+    });
   });
 }

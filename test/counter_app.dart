@@ -24,6 +24,11 @@ class ErrorMessage implements Message {
 
 class OnSuccessEffect implements Message {}
 
+class OnSuccessEffectWithResult implements Message {
+  final String result;
+  OnSuccessEffectWithResult(this.result);
+}
+
 Upd<Model, Message> init(int start, {Cmd<Message> effect}) =>
     new Upd(new Model(counter: start, effect: effect));
 

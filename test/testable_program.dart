@@ -21,9 +21,15 @@ class TestProgram<TArg, TModel, TMsg> {
   }
 
   void runWith(TArg arg) {
-    _program.runWith((app) {
-      frames.add(new MaterialApp(home: app));
-    }, arg);
+    _program.runWith(_render, arg);
+  }
+
+  void withSubscribe(Subscribe<TModel, TMsg> subscribe) {
+    _program = _program.copyWith(subscribe: subscribe);
+  }
+
+  void _render(Widget app) {
+    frames.add(new MaterialApp(home: app));
   }
 
   Stream<TMsg> get updates => _updateController.stream;
