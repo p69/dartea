@@ -20,9 +20,9 @@ void main() {
           TestProgram((start) => init(start, effect: effect), update, view);
       program.runWith(initArg);
 
-      await tester.pumpWidget(program.frames.removeLast());
+      await tester.pumpWidget(program.frame);
       await tester.tap(find.byKey(effectBtnKey));
-      await tester.pumpWidget(program.frames.removeLast());
+      await tester.pumpWidget(program.frame);
 
       expect(
           program.updates,
@@ -44,9 +44,9 @@ void main() {
           TestProgram((start) => init(start, effect: effect), update, view);
       program.runWith(initArg);
 
-      await tester.pumpWidget(program.frames.removeLast());
+      await tester.pumpWidget(program.frame);
       await tester.tap(find.byKey(effectBtnKey));
-      await tester.pumpWidget(program.frames.removeLast());
+      await tester.pumpWidget(program.frame);
 
       expect(
           program.updates,
@@ -71,9 +71,9 @@ void main() {
           TestProgram((start) => init(start, effect: effect), update, view);
       program.runWith(initArg);
 
-      await tester.pumpWidget(program.frames.removeLast());
+      await tester.pumpWidget(program.frame);
       await tester.tap(find.byKey(effectBtnKey));
-      await tester.pumpWidget(program.frames.removeLast());
+      await tester.pumpWidget(program.frame);
 
       expect(
           program.updates,
@@ -99,9 +99,9 @@ void main() {
           TestProgram((start) => init(start, effect: effect), update, view);
       program.runWith(initArg);
 
-      await tester.pumpWidget(program.frames.removeLast());
+      await tester.pumpWidget(program.frame);
       await tester.tap(find.byKey(effectBtnKey));
-      await tester.pumpWidget(program.frames.removeLast());
+      await tester.pumpWidget(program.frame);
 
       expect(
           program.updates,
@@ -126,9 +126,9 @@ void main() {
           TestProgram((start) => init(start, effect: effect), update, view);
       program.runWith(initArg);
 
-      await tester.pumpWidget(program.frames.removeLast());
+      await tester.pumpWidget(program.frame);
       await tester.tap(find.byKey(effectBtnKey));
-      await tester.pumpWidget(program.frames.removeLast());
+      await tester.pumpWidget(program.frame);
 
       expect(
           program.updates,

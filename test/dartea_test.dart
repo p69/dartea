@@ -19,7 +19,7 @@ void main() {
       final initArg = 42;
       program.runWith(initArg);
 
-      var lastFrame = program.frames.removeLast();
+      var lastFrame = program.frame;
       await tester.pumpWidget(lastFrame);
 
       expect(program.views,
@@ -31,7 +31,7 @@ void main() {
       final initArg = 0;
       program.runWith(initArg);
 
-      await tester.pumpWidget(program.frames.removeLast());
+      await tester.pumpWidget(program.frame);
 
       var incrementsCount = 10;
       var decrementsCount = 4;
@@ -43,7 +43,7 @@ void main() {
         await tester.tap(find.byKey(decrementBtnKey));
       }
 
-      await tester.pumpWidget(program.frames.removeLast());
+      await tester.pumpWidget(program.frame);
 
       var updateStreamMatchers = new List<Matcher>();
 
@@ -67,10 +67,10 @@ void main() {
           Cmd.ofSub((Dispatch<Message> dispatch) {
             externalSource.stream.listen((m) => dispatch(m));
           });
-      program.withSubscribe(subscribe);
+      program.withSubscription(subscribe);
       program.runWith(initArg);
 
-      await tester.pumpWidget(program.frames.removeLast());
+      await tester.pumpWidget(program.frame);
       int incrementsCount = 5;
       var updateMatchers = new List<Matcher>();
       for (var i = 0; i < incrementsCount; i++) {
