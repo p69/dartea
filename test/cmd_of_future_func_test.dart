@@ -18,9 +18,9 @@ void main() {
     setUp(() {
       Future<String> successFunc() => Future.sync(() => sideEffect);
       Future<String> errorFunc() => Future.sync(() => throw error);
-      successEffect = Cmd.ofFutureFunc<String, Message>(successFunc,
+      successEffect = Cmd.ofAsyncFunc<String, Message>(successFunc,
           onSuccess: (x) => OnSuccessEffectWithResult(x));
-      errorEffect = Cmd.ofFutureFunc<String, Message>(errorFunc,
+      errorEffect = Cmd.ofAsyncFunc<String, Message>(errorFunc,
           onSuccess: (x) => OnSuccessEffectWithResult(x),
           onError: (Exception e) => ErrorMessage(e.toString()));
     });

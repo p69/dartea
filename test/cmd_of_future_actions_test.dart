@@ -26,13 +26,13 @@ void main() {
         throw error;
       }
 
-      successEffect = Cmd.ofFutureAction<Message>(successAction,
+      successEffect = Cmd.ofAsyncAction<Message>(successAction,
           onSuccess: () => OnSuccessEffect());
-      errorEffect = Cmd.ofFutureAction<Message>(errorAction,
+      errorEffect = Cmd.ofAsyncAction<Message>(errorAction,
           onError: (Exception e) => ErrorMessage(e.toString()));
     });
 
-    testWidgets('0 args success', (WidgetTester tester) async {
+    testWidgets('success', (WidgetTester tester) async {
       var program =
           TestProgram(() => init(initArg, effect: successEffect), update, view);
       program.run();

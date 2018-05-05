@@ -23,7 +23,7 @@ class Cmd<TMsg> extends DelegatingList<Effect<TMsg>> {
     });
   }
 
-  static Cmd<TMsg> ofFutureAction<TMsg>(Future action(),
+  static Cmd<TMsg> ofAsyncAction<TMsg>(Future action(),
       {TMsg onSuccess(), TMsg onError(Exception e)}) {
     return new Cmd.ofEffect((disptach) async {
       try {
@@ -53,7 +53,7 @@ class Cmd<TMsg> extends DelegatingList<Effect<TMsg>> {
     });
   }
 
-  static Cmd<TMsg> ofFutureFunc<TResult, TMsg>(Future<TResult> func(),
+  static Cmd<TMsg> ofAsyncFunc<TResult, TMsg>(Future<TResult> func(),
       {@required TMsg onSuccess(TResult r), TMsg onError(Exception e)}) {
     return new Cmd.ofEffect((disptach) async {
       try {
