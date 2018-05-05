@@ -64,7 +64,7 @@ void main() {
       final initArg = 0;
       var externalSource = new StreamController<Message>();
       Cmd<Message> subscribe(Model model) =>
-          Cmd.ofSub((Dispatch<Message> dispatch) {
+          Cmd.ofEffect((Dispatch<Message> dispatch) {
             externalSource.stream.listen((m) => dispatch(m));
           });
       program.withSubscription(subscribe);

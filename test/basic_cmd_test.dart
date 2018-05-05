@@ -32,7 +32,7 @@ void main() {
     testWidgets('cmd of sub', (WidgetTester tester) async {
       var initArg = 0;
       var effect =
-          Cmd.ofSub((Dispatch<Message> dispatch) => dispatch(Increment()));
+          Cmd.ofEffect((Dispatch<Message> dispatch) => dispatch(Increment()));
       var program =
           TestProgram((start) => init(start, effect: effect), update, view);
       program.runWith(initArg);

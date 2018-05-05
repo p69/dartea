@@ -27,7 +27,7 @@ class Program<TModel, TMsg, TSub> {
             onError ?? ((s, e) => debugPrint('Dartea program error: $e\n$s')),
         this.sub = subscription ?? ((_, __, ___) => null),
         this.lifeCycleUpdate =
-            lifeCycleUpd != null ? lifeCycleUpd : ((_, m) => Upd(m));
+            lifeCycleUpd != null ? lifeCycleUpd : ((_, __) => null);
 
   ///wrap all functions with [debugPrint]
   Program<TModel, TMsg, TSub> withDebugTrace() {

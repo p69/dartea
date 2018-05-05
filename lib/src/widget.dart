@@ -36,7 +36,7 @@ class _DrateaProgramState<TModel, TMsg, TSub>
 
     var initial = program.init();
     var initialModel = initial.model;
-    var initialEffects = new List<Sub<TMsg>>();
+    var initialEffects = new List<Effect<TMsg>>();
     initialEffects.addAll(initial.effects);
     var newModel = initialModel;
 

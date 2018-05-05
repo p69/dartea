@@ -4,7 +4,7 @@ part of dartea;
 typedef Dispatch<TMsg> = void Function(TMsg msg);
 
 /// callback for side-effects
-typedef Sub<TMsg> = void Function(Dispatch<TMsg> dispatch);
+typedef Effect<TMsg> = void Function(Dispatch<TMsg> dispatch);
 
 /// function for initializing model
 typedef Init<TModel, TMsg> = Upd<TModel, TMsg> Function();
