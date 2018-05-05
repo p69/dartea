@@ -9,27 +9,27 @@ import 'counter_app.dart';
 
 void main() {
   group('main functions', () {
-    TestProgram<int, Model, Message> program;
+    int startVal = 0;
+    TestProgram<Model, Message> program;
 
     setUp(() {
-      program = new TestProgram(init, update, view);
+      program = new TestProgram(() => init(startVal), update, view);
     });
 
     testWidgets('init', (WidgetTester tester) async {
-      final initArg = 42;
-      program.runWith(initArg);
+      startVal = 42;
+      program.run();
 
       var lastFrame = program.frame;
       await tester.pumpWidget(lastFrame);
 
       expect(program.views,
-          emitsInOrder([predicate((Model m) => m.counter == initArg)]));
-      expect(find.text(initArg.toString()), findsOneWidget);
+          emitsInOrder([predicate((Model m) => m.counter == startVal)]));
+      expect(find.text(startVal.toString()), findsOneWidget);
     });
 
     testWidgets('update', (WidgetTester tester) async {
-      final initArg = 0;
-      program.runWith(initArg);
+      program.run();
 
       await tester.pumpWidget(program.frame);
 
@@ -56,19 +56,25 @@ void main() {
 
       expect(program.updates, emitsInOrder(updateStreamMatchers));
       expect(
-          find.text((initArg + incrementsCount - decrementsCount).toString()),
+          find.text((startVal + incrementsCount - decrementsCount).toString()),
           findsOneWidget);
     });
 
     testWidgets('subscribe', (WidgetTester tester) async {
-      final initArg = 0;
       var externalSource = new StreamController<Message>();
-      Cmd<Message> subscribe(Model model) =>
-          Cmd.ofEffect((Dispatch<Message> dispatch) {
-            externalSource.stream.listen((m) => dispatch(m));
-          });
+
+      StreamSubscription<Message> subscribe(
+          StreamSubscription<Message> currentSub,
+          Dispatch<Message> dispatch,
+          Model model) {
+        if (currentSub != null) {
+          return currentSub;
+        }
+        return externalSource.stream.listen((m) => dispatch(m));
+      }
+
       program.withSubscription(subscribe);
-      program.runWith(initArg);
+      program.run();
 
       await tester.pumpWidget(program.frame);
       int incrementsCount = 5;

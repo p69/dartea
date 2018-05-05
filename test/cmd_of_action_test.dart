@@ -9,21 +9,26 @@ import 'counter_app.dart';
 
 void main() {
   group('cmd of actions', () {
+    const initArg = 0;
+    const sideEffect = "side effect!";
     StreamController<String> effectsController;
+    Cmd<Message> successEffect;
+    Cmd<Message> errorEffect;
+    Exception error = new Exception(sideEffect);
 
     setUp(() {
       effectsController = new StreamController<String>();
-    });
-
-    testWidgets('0 args success', (WidgetTester tester) async {
-      var initArg = 0;
-      var sideEffect = "side effect!";
-      var effect = Cmd.ofAction<Message>(
+      successEffect = Cmd.ofAction<Message>(
           () => effectsController.add(sideEffect),
           onSuccess: () => OnSuccessEffect());
-      var program =
-          TestProgram((start) => init(start, effect: effect), update, view);
-      program.runWith(initArg);
+      errorEffect = Cmd.ofAction<Message>(() => throw error,
+          onError: (Exception e) => ErrorMessage(e.toString()));
+    });
+
+    testWidgets('success', (WidgetTester tester) async {
+      final program =
+          TestProgram(() => init(initArg, effect: successEffect), update, view);
+      program.run();
 
       await tester.pumpWidget(program.frame);
       await tester.tap(find.byKey(incrementBtnKey));
@@ -44,99 +49,10 @@ void main() {
       expect(find.text((initArg + 1).toString()), findsOneWidget);
     });
 
-    testWidgets('1 arg success', (WidgetTester tester) async {
-      var initArg = 0;
-      var sideEffect = "side effect!";
-      var effect = Cmd.ofAction1<Message, String>(
-          (arg) => effectsController.add(arg), sideEffect,
-          onSuccess: () => OnSuccessEffect());
-      var program =
-          TestProgram((start) => init(start, effect: effect), update, view);
-      program.runWith(initArg);
-
-      await tester.pumpWidget(program.frame);
-      await tester.tap(find.byKey(incrementBtnKey));
-      await tester.tap(find.byKey(effectBtnKey));
-      await tester.pumpWidget(program.frame);
-
-      expect(
-          program.updates,
-          emitsInOrder([
-            predicate((Message m) => m is Increment),
-            predicate((Message m) => m is DoSideEffect),
-            predicate((Message m) => m is OnSuccessEffect)
-          ]));
-      expect(effectsController.stream, emitsInOrder([sideEffect]));
-      expect(find.text((initArg + 1).toString()), findsOneWidget);
-    });
-
-    testWidgets('2 args success', (WidgetTester tester) async {
-      var initArg = 0;
-      var arg1 = "side ";
-      var arg2 = "effect!";
-      var effect = Cmd.ofAction2<Message, String, String>(
-          (arg1, arg2) => effectsController.add(arg1 + arg2), arg1, arg2,
-          onSuccess: () => OnSuccessEffect());
-      var program =
-          TestProgram((start) => init(start, effect: effect), update, view);
-      program.runWith(initArg);
-
-      await tester.pumpWidget(program.frame);
-      await tester.tap(find.byKey(incrementBtnKey));
-      await tester.tap(find.byKey(effectBtnKey));
-      await tester.pumpWidget(program.frame);
-
-      expect(
-          program.updates,
-          emitsInOrder([
-            predicate((Message m) => m is Increment),
-            predicate((Message m) => m is DoSideEffect),
-            predicate((Message m) => m is OnSuccessEffect)
-          ]));
-      expect(effectsController.stream, emitsInOrder([arg1 + arg2]));
-      expect(find.text((initArg + 1).toString()), findsOneWidget);
-    });
-
-    testWidgets('3 args success', (WidgetTester tester) async {
-      var initArg = 0;
-      var arg1 = "side ";
-      var arg2 = "effect";
-      var arg3 = "!";
-      var effect = Cmd.ofAction3<Message, String, String, String>(
-          (arg1, arg2, arg3) => effectsController.add(arg1 + arg2 + arg3),
-          arg1,
-          arg2,
-          arg3,
-          onSuccess: () => OnSuccessEffect());
-      var program =
-          TestProgram((start) => init(start, effect: effect), update, view);
-      program.runWith(initArg);
-
-      await tester.pumpWidget(program.frame);
-      await tester.tap(find.byKey(incrementBtnKey));
-      await tester.tap(find.byKey(effectBtnKey));
-      await tester.pumpWidget(program.frame);
-
-      expect(
-          program.updates,
-          emitsInOrder([
-            predicate((Message m) => m is Increment),
-            predicate((Message m) => m is DoSideEffect),
-            predicate((Message m) => m is OnSuccessEffect)
-          ]));
-      expect(effectsController.stream, emitsInOrder([arg1 + arg2 + arg3]));
-      expect(find.text((initArg + 1).toString()), findsOneWidget);
-    });
-
     testWidgets('error', (WidgetTester tester) async {
-      var initArg = 0;
-      var sideEffect = "side effect!";
-      var error = new Exception(sideEffect);
-      var effect = Cmd.ofAction<Message>(() => throw error,
-          onError: (Exception e) => ErrorMessage(e.toString()));
-      var program =
-          TestProgram((start) => init(start, effect: effect), update, view);
-      program.runWith(initArg);
+      final program =
+          TestProgram(() => init(initArg, effect: errorEffect), update, view);
+      program.run();
 
       await tester.pumpWidget(program.frame);
       await tester.tap(find.byKey(effectBtnKey));

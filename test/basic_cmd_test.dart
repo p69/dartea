@@ -11,8 +11,8 @@ void main() {
       var initArg = 0;
       var effect = Cmd.ofMsg(Increment());
       var program =
-          TestProgram((start) => init(start, effect: effect), update, view);
-      program.runWith(initArg);
+          TestProgram(() => init(initArg, effect: effect), update, view);
+      program.run();
 
       await tester.pumpWidget(program.frame);
       await tester.tap(find.byKey(incrementBtnKey));
@@ -34,8 +34,8 @@ void main() {
       var effect =
           Cmd.ofEffect((Dispatch<Message> dispatch) => dispatch(Increment()));
       var program =
-          TestProgram((start) => init(start, effect: effect), update, view);
-      program.runWith(initArg);
+          TestProgram(() => init(initArg, effect: effect), update, view);
+      program.run();
 
       await tester.pumpWidget(program.frame);
       await tester.tap(find.byKey(incrementBtnKey));
@@ -56,8 +56,8 @@ void main() {
       var initArg = 0;
       Cmd<Message> effect = Cmd.none();
       var program =
-          TestProgram((start) => init(start, effect: effect), update, view);
-      program.runWith(initArg);
+          TestProgram(() => init(initArg, effect: effect), update, view);
+      program.run();
 
       await tester.pumpWidget(program.frame);
       await tester.tap(find.byKey(incrementBtnKey));
@@ -82,8 +82,8 @@ void main() {
         Cmd.ofMsg(Decrement())
       ]);
       var program =
-          TestProgram((start) => init(start, effect: effect), update, view);
-      program.runWith(initArg);
+          TestProgram(() => init(initArg, effect: effect), update, view);
+      program.run();
 
       await tester.pumpWidget(program.frame);
       await tester.tap(find.byKey(effectBtnKey));
@@ -105,8 +105,8 @@ void main() {
       var initArg = 0;
       var effect = Cmd.fmap(_invert, Cmd.ofMsg(Increment()));
       var program =
-          TestProgram((start) => init(start, effect: effect), update, view);
-      program.runWith(initArg);
+          TestProgram(() => init(initArg, effect: effect), update, view);
+      program.run();
 
       await tester.pumpWidget(program.frame);
       await tester.tap(find.byKey(incrementBtnKey));

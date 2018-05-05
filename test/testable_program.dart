@@ -3,31 +3,31 @@ import 'dart:async';
 import 'package:dartea/dartea.dart';
 import 'package:flutter/material.dart';
 
-class TestProgram<TArg, TModel, TMsg> {
-  Program<TArg, TModel, TMsg> _program;
+class TestProgram<TModel, TMsg> {
+  Program<TModel, TMsg, StreamSubscription<TMsg>> _program;
   final _updateController = new StreamController<TMsg>();
   final _viewController = new StreamController<TModel>();
   Widget _widget;
 
-  TestProgram(Init<TArg, TModel, TMsg> init, Update<TModel, TMsg> update,
+  TestProgram(Init<TModel, TMsg> init, Update<TModel, TMsg> update,
       View<TModel, TMsg> view,
-      {Subscribe<TModel, TMsg> subscribe}) {
+      {Subscribe<TModel, TMsg, StreamSubscription<TMsg>> subscribe}) {
     this._program = new Program(init, (msg, m) {
       _updateController.add(msg);
       return update(msg, m);
     }, (c, d, m) {
       _viewController.add(m);
       return view(c, d, m);
-    }, subscribe: subscribe);
+    }, subscription: subscribe);
   }
 
-  void withSubscription(Subscribe<TModel, TMsg> subscribe) {
+  void withSubscription(Subscribe<TModel, TMsg, StreamSubscription<TMsg>> subscribe) {
     _program = new Program(_program.init, _program.update, _program.view,
-        subscribe: subscribe);
+        subscription: subscribe);
   }
 
-  void runWith(TArg arg) {
-    _widget = _program.buildWith(initArg: arg);
+  void run() {
+    _widget = _program.build();
   }
 
   Widget get frame => new MaterialApp(home: _widget);
