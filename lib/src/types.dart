@@ -7,21 +7,26 @@ typedef Dispatch<TMsg> = void Function(TMsg msg);
 typedef Sub<TMsg> = void Function(Dispatch<TMsg> dispatch);
 
 /// function for initializing model
-typedef Init<TArg, TModel, TMsg> = Upd<TModel, TMsg> Function(TArg params);
+typedef Init<TModel, TMsg> = Upd<TModel, TMsg> Function();
 
 /// function for creating widgets tree
 typedef View<TModel, TMsg> = Widget Function(
     BuildContext ctx, Dispatch<TMsg> dispatch, TModel model);
 
 /// function for error handling in runtime loop
-typedef OnError = void Function(String description, Exception exception);
+typedef OnError = void Function(StackTrace stacktrace, Exception exception);
 
 /// function for updating state(model)
 typedef Update<TModel, TMsg> = Upd<TModel, TMsg> Function(
     TMsg msg, TModel model);
 
+/// function for handling app Flutter lifecycle events and updating state(model)
+typedef LifeCycleUpdate<TModel, TMsg> = Upd<TModel, TMsg> Function(
+    AppLifecycleState appState, TModel model);
+
 /// function for subsrcibing on external sources
-typedef Subscribe<TModel, TMsg> = Cmd<TMsg> Function(TModel model);
+typedef Subscribe<TModel, TMsg, TSubHolder> = TSubHolder Function(
+    TSubHolder currentSub, Dispatch<TMsg> dispatch, TModel model);
 
 /// function for render created widgets tree (typicaly through runApp)
 typedef RenderView = void Function(Widget root);

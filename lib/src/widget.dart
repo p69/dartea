@@ -2,89 +2,91 @@ part of dartea;
 
 const rootKey = const Key('dartea_root_widget');
 
-class DarteaWidget<TArg, TModel, TMsg> extends StatefulWidget {
-  final Program<TArg, TModel, TMsg> program;
-  final TArg initArg;
+class DarteaWidget<TModel, TMsg, TSub> extends StatefulWidget {
+  final Program<TModel, TMsg, TSub> program;
 
-  DarteaWidget(this.program, {this.initArg, Key key})
-      : super(key: key ?? rootKey);
+  DarteaWidget(this.program, {Key key}) : super(key: key ?? rootKey);
   @override
   State<StatefulWidget> createState() =>
-      new _DrateaProgramState<TArg, TModel, TMsg>();
+      new _DrateaProgramState<TModel, TMsg, TSub>();
 }
 
-class _DrateaProgramState<TArg, TModel, TMsg>
-    extends State<DarteaWidget<TArg, TModel, TMsg>>
+class _DrateaProgramState<TModel, TMsg, TSub>
+    extends State<DarteaWidget<TModel, TMsg, TSub>>
     with WidgetsBindingObserver {
   TModel _currentModel;
-  StreamController<TMsg> _controller = new StreamController();
-  StreamSubscription<TMsg> _sub;
+  final StreamController<TMsg> _mainLoopController = new StreamController();
+  final StreamController<AppLifecycleState> _lifeCycleController =
+      new StreamController();
+  StreamSubscription<Upd<TModel, TMsg>> _appLoopSub;
+  TSub _appSubHolder;
 
   Dispatch<TMsg> get dispatcher => (m) {
-        if (!_controller.isClosed) {
-          _controller.add(m);
+        if (!_mainLoopController.isClosed) {
+          _mainLoopController.add(m);
         }
       };
 
-  Program<TArg, TModel, TMsg> get program => widget.program;
+  Program<TModel, TMsg, TSub> get program => widget.program;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    var initial = program.init(widget.initArg);
+    var initial = program.init();
     var initialModel = initial.model;
     var initialEffects = new List<Sub<TMsg>>();
     initialEffects.addAll(initial.effects);
     var newModel = initialModel;
 
-    _sub = _controller.stream.listen((msg) {
-      debugPrint("Dartea program: handle message $msg.");
-      try {
-        var updates = program.update(msg, newModel);
-        newModel = updates.model;
-        if (newModel != _currentModel) {
-          setState(() {
-            _currentModel = newModel;
-          });
-        }
-        for (var effect in updates.effects) {
-          effect(dispatcher);
-        }
-      } on Exception catch (e) {
-        program.onError(
-            "Dartea program error: failed while processing message $msg", e);
+    final lifeCycleStream = _lifeCycleController.stream
+        .map((x) =>
+            newModel != null ? program.lifeCycleUpdate(x, newModel) : null)
+        .where((x) => x != null);
+
+    final mainLoopStream = _mainLoopController.stream
+        .map((msg) => msg != null && newModel != null
+            ? program.update(msg, newModel)
+            : null)
+        .where((x) => x != null);
+
+    final updStream = StreamGroup.merge([lifeCycleStream, mainLoopStream]);
+
+    _appLoopSub = updStream
+        .handleError((e, st) => program.onError(st, e))
+        .listen((updates) {
+      newModel = updates.model;
+      if (newModel != _currentModel) {
+        setState(() {
+          _currentModel = newModel;
+        });
+      }
+      _appSubHolder = program.sub(_appSubHolder, dispatcher, newModel);
+      for (var effect in updates.effects) {
+        effect(dispatcher);
       }
     });
 
     setState(() {
       _currentModel = newModel;
     });
-    initialEffects.addAll(program.subscribe(newModel));
+    _appSubHolder = program.sub(_appSubHolder, dispatcher, newModel);
     initialEffects.forEach((effect) => effect(dispatcher));
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _sub?.cancel();
-    _controller?.close();
+    _appLoopSub?.cancel();
+    _mainLoopController.close();
+    _lifeCycleController.close();
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    debugPrint("Dartea program app state chaned: $state.");
-    switch (state) {
-      case AppLifecycleState.inactive:
-      case AppLifecycleState.paused:
-      case AppLifecycleState.suspending:
-        _sub?.pause();
-        break;
-      case AppLifecycleState.resumed:
-        _sub?.resume();
-    }
+    _lifeCycleController.add(state);
   }
 
   @override
