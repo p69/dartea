@@ -14,7 +14,7 @@ void main() {
               lifeCycleUpdate, //handle Flutter lifecycle events and returns updated state + side effects
           onError: (s, e) =>
               debugPrint('Handle app error: $e\n$s')) //handle all errors
-      .withDebugTrace();
+      .withDebugTrace(); //Output to the console all the messages, model changes and etc.
   runApp(MyApp(program));
 }
 
@@ -48,24 +48,32 @@ class Model {
 }
 
 ///Messages - described actions and events, which could affect [Model]
-abstract class Message {
+abstract class Message {}
+
+class Increment implements Message {
   @override
-  String toString() => '${this.runtimeType}';
+  String toString() => 'Increment';
 }
 
-class Increment implements Message {}
+class Decrement implements Message {
+  @override
+  String toString() => 'Decrement';
+}
 
-class Decrement implements Message {}
+class StartAutoIncrement implements Message {
+  @override
+  String toString() => 'StartAutoIncrement';
+}
 
-class StartAutoIncrement implements Message {}
+class StopAutoIncrement implements Message {
+  @override
+  String toString() => 'StopAutoIncrement';
+}
 
-class StopAutoIncrement implements Message {}
-
-class RaiseError implements Message {}
-
+///create initial [Model] + side-effects (optional)
 Upd<Model, Message> init() => Upd(Model(0, false));
 
-///Update - the heart of the [dartea] program. Handle messages and current model, returns updated model.
+///Update - the heart of the [dartea] program. Handle messages and current model, returns updated model + side-effects(optional).
 Upd<Model, Message> update(Message msg, Model model) {
   if (msg is Increment) {
     return Upd(model.copyWith(counter: model.counter + 1));
@@ -79,12 +87,10 @@ Upd<Model, Message> update(Message msg, Model model) {
   if (msg is StopAutoIncrement) {
     return Upd(model.copyWith(autoIncrement: false));
   }
-  if (msg is RaiseError) {
-    throw Exception('Wow, error!'); // all exception goes to Program.onError
-  }
   return Upd(model);
 }
 
+///Simple timer for emulating some external events
 const _timeout = const Duration(seconds: 1);
 Timer _periodicTimerSubscription(
     Timer currentTimer, Dispatch<Message> dispatch, Model model) {
@@ -98,6 +104,7 @@ Timer _periodicTimerSubscription(
   return null;
 }
 
+///Handle app lifecycle events, almost the same as [update] function
 Upd<Model, Message> lifeCycleUpdate(AppLifecycleState appState, Model model) {
   switch (appState) {
     case AppLifecycleState.inactive:
@@ -119,10 +126,8 @@ Widget view(BuildContext context, Dispatch<Message> dispatch, Model model) {
     body: new Center(
       child: new Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          new Text(
-            'You have pushed the button this many times:',
-          ),
           new Text(
             '${model.counter}',
             style: Theme.of(context).textTheme.display1,
@@ -142,6 +147,7 @@ Widget view(BuildContext context, Dispatch<Message> dispatch, Model model) {
             onPressed: model.autoIncrement ? null : () => dispatch(Decrement()),
           ),
           new Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               new Switch(
                 value: model.autoIncrement,
@@ -153,11 +159,6 @@ Widget view(BuildContext context, Dispatch<Message> dispatch, Model model) {
           )
         ],
       ),
-    ),
-    floatingActionButton: new FloatingActionButton(
-      onPressed: () => dispatch(RaiseError()),
-      tooltip: 'Increment',
-      child: new Icon(Icons.error),
     ),
   );
 }
