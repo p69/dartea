@@ -1,4 +1,5 @@
 # dartea
+[![Build Status](https://travis-ci.org/p69/dartea.svg?branch=master)](https://travis-ci.org/p69/dartea)  [![codecov](https://codecov.io/gh/p69/dartea/branch/master/graph/badge.svg)](https://codecov.io/gh/p69/dartea)
 
 Implementation of MVU (Model View Update) pattern for Flutter.
 Inspired by [TEA (The Elm Architecture)](https://guide.elm-lang.org/architecture/) and [Elmish (F# TEA implemetation)](https://fable-elmish.github.io/elmish/)
