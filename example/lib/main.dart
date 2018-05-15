@@ -119,42 +119,42 @@ Upd<Model, Message> lifeCycleUpdate(AppLifecycleState appState, Model model) {
 
 ///View - maps [Model] to the Flutter's Widgets tree
 Widget view(BuildContext context, Dispatch<Message> dispatch, Model model) {
-  return new Scaffold(
-    appBar: new AppBar(
-      title: new Text('Flutter MVU example'),
+  return Scaffold(
+    appBar: AppBar(
+      title: Text('Flutter MVU example'),
     ),
-    body: new Center(
-      child: new Column(
+    body: Center(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          new Text(
+          Text(
             '${model.counter}',
             style: Theme.of(context).textTheme.display1,
           ),
-          new Padding(
-            child: new RaisedButton.icon(
-              label: new Text('Increment'),
-              icon: new Icon(Icons.add),
+          Padding(
+            child: RaisedButton.icon(
+              label: Text('Increment'),
+              icon: Icon(Icons.add),
               onPressed:
                   model.autoIncrement ? null : () => dispatch(Increment()),
             ),
             padding: EdgeInsets.all(5.0),
           ),
-          new RaisedButton.icon(
-            label: new Text('Decrement'),
-            icon: new Icon(Icons.remove),
+          RaisedButton.icon(
+            label: Text('Decrement'),
+            icon: Icon(Icons.remove),
             onPressed: model.autoIncrement ? null : () => dispatch(Decrement()),
           ),
-          new Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              new Switch(
+              Switch(
                 value: model.autoIncrement,
                 onChanged: (v) =>
                     dispatch(v ? StartAutoIncrement() : StopAutoIncrement()),
               ),
-              new Text('Auto increment every second')
+              Text('Auto increment every second')
             ],
           )
         ],
