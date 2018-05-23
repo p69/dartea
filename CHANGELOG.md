@@ -1,3 +1,6 @@
+## [0.5.2] - 24.05.2018
+* Fix dependencies issue
+
 ## [0.5.0] - 15.05.2018
 * Removed `TArg` from `Prgram` and `Init`. All arguments for `init` function should be captured in closure.
 * Changed `Subscription` mechamism.
