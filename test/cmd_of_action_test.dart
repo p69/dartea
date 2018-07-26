@@ -25,6 +25,10 @@ void main() {
           onError: (Exception e) => ErrorMessage(e.toString()));
     });
 
+    tearDown(() async {
+      effectsController.close();
+    });
+
     testWidgets('success', (WidgetTester tester) async {
       final program =
           TestProgram(() => init(initArg, effect: successEffect), update, view);

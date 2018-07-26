@@ -61,7 +61,7 @@ void main() {
     });
 
     testWidgets('subscribe', (WidgetTester tester) async {
-      var externalSource = new StreamController<Message>();
+      final externalSource = new StreamController<Message>();
 
       StreamSubscription<Message> subscribe(
           StreamSubscription<Message> currentSub,
@@ -85,6 +85,7 @@ void main() {
       }
 
       expect(program.updates, emitsInOrder(updateMatchers));
+      externalSource.close();
     });
   });
 }
