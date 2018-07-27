@@ -1,3 +1,7 @@
+## [0.5.5] - 27.07.2018
+* Support Dart2
+* Upgrade `async` package version to 2.0.7
+
 ## [0.5.2] - 24.05.2018
 * Fix dependencies issue
 
