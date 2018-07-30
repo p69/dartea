@@ -53,20 +53,21 @@ class _DrateaProgramState<TModel, TMsg, TSub>
 
     final updStream = StreamGroup.merge([lifeCycleStream, mainLoopStream]);
 
-    _appLoopSub = updStream
-        .handleError((e, st) => program.onError(st, e))
-        .listen((updates) {
-      newModel = updates.model;
-      if (newModel != _currentModel) {
-        setState(() {
-          _currentModel = newModel;
-        });
-      }
-      _appSubHolder = program.sub(_appSubHolder, dispatcher, newModel);
-      for (var effect in updates.effects) {
-        effect(dispatcher);
-      }
-    });
+    _appLoopSub =
+        updStream.handleError((e, st) => program.onError(st, e)).listen(
+      (updates) {
+        newModel = updates.model;
+        if (newModel != _currentModel) {
+          setState(() {
+            _currentModel = newModel;
+          });
+        }
+        _appSubHolder = program.sub(_appSubHolder, dispatcher, newModel);
+        for (var effect in updates.effects) {
+          effect(dispatcher);
+        }
+      },
+    );
 
     setState(() {
       _currentModel = newModel;
