@@ -111,11 +111,11 @@ And that's it. [Here](/example) is more advanced example.
 1. Single responsibility. Whole application state is in `model`, all the logic is in `update`,
 all the UI is in `view`.
 2. `view` and `update` are pure functions and `model` is immutable - easy to test, easy to maintain.
-3. Easy and straitforward composition. You can split youre app into nested components (`model`, `view`, `update`).
+3. Easy and straitforward composition. You can split your app into nested components (`model`, `view`, `update`).
 4. Side-effects are decoupled and isolated. It helps us to write and refactor presentation logic and side-effects separately.
 5. `model` and `messagess` describe all possible application's states.
 
 ## Cons
 1. `setState()` is called on the root widget and it means that every widget in the tree should be rebuilt. Flutter is smart enough to make just incremental changes, but in general this is not so good.
-2. `update` function is pure and easy for testing, but testing side-effects (`commands`) could be tricky. Although I think in most cases we can avoid it, but it could be necessary sometimes. You can find example of commands testing [here](https://github.com/brianegan/flutter_architecture_samples/blob/master/example/mvu/test/stats_screen_test.dart). It's a pretty good example of a Todo app.
-3. Even though composition is easy and straightforward, but it requires some boilerplate code.
+2. `update` function is pure and easy for testing, but testing side-effects (`commands`) can be tricky. Although I think in most cases we can avoid it, it could be necessary sometimes. You can find examples of commands testing [here](https://github.com/brianegan/flutter_architecture_samples/blob/master/example/mvu/test/stats_screen_test.dart). It's a pretty good example of a Todo app.
+3. Even though composition is easy and straightforward, it requires some boilerplate code.
