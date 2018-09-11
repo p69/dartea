@@ -119,3 +119,7 @@ all the UI is in `view`.
 1. `setState()` is called on the root widget and it means that every widget in the tree should be rebuilt. Flutter is smart enough to make just incremental changes, but in general this is not so good.
 2. `update` function is pure and easy for testing, but testing side-effects (`commands`) can be tricky. Although I think in most cases we can avoid it, it could be necessary sometimes. You can find examples of commands testing [here](https://github.com/brianegan/flutter_architecture_samples/blob/master/example/mvu/test/stats_screen_test.dart). It's a pretty good example of a Todo app.
 3. Even though composition is easy and straightforward, it requires some boilerplate code.
+
+## Sample apps
+* [Calculator](https://github.com/p69/dartea_calculator)
+* [Todo](https://github.com/brianegan/flutter_architecture_samples/tree/master/example/mvu)
