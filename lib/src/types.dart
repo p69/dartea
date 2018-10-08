@@ -28,14 +28,12 @@ typedef LifeCycleUpdate<TModel, TMsg> = Upd<TModel, TMsg> Function(
 typedef Subscribe<TModel, TMsg, TSubHolder> = TSubHolder Function(
     TSubHolder currentSub, Dispatch<TMsg> dispatch, TModel model);
 
-/// function for render created widgets tree (typicaly through runApp)
-typedef RenderView = void Function(Widget root);
-
 /// Simple tuple of Model*Cmds (for init or update functions)
 class Upd<TModel, TMsg> {
   final TModel model;
   final Cmd<TMsg> effects;
-  Upd(this.model, {this.effects = const Cmd(const [])});
+  final List<dynamic> msgsToBus;
+  Upd(this.model, {this.effects = const Cmd(const []), this.msgsToBus = const[]});
 }
 
 /// The same as [Upd] but with addional messages for communication child with parent

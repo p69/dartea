@@ -26,9 +26,11 @@ class TestProgram<TModel, TMsg> {
         subscription: subscribe);
   }
 
-  void run() {
-    _widget = _program.build();
+  void run({bool enableMsgBus = false}) {
+    _widget = _program.build(withMessagesBus: enableMsgBus);
   }
+
+  Widget get programWidget => _widget;
 
   Widget get frame => new MaterialApp(home: _widget);
 

@@ -4,9 +4,20 @@ import 'package:flutter/material.dart';
 class Model {
   int counter;
   Cmd<Message> effect;
-  Model({this.counter = 0, this.effect});
-  Model copyWith({int counter, Cmd<Message> effect}) =>
-      Model(counter: counter ?? this.counter, effect: effect ?? this.effect);
+  Key incrementBtnKey;
+  Key decrementBtnKey;
+
+  Model(
+      {this.counter = 0,
+      this.effect,
+      this.incrementBtnKey,
+      this.decrementBtnKey});
+  Model copyWith({int counter, Cmd<Message> effect}) => Model(
+        counter: counter ?? this.counter,
+        effect: effect ?? this.effect,
+        incrementBtnKey: this.incrementBtnKey,
+        decrementBtnKey: this.decrementBtnKey,
+      );
 }
 
 abstract class Message {}
@@ -29,8 +40,18 @@ class OnSuccessEffectWithResult implements Message {
   OnSuccessEffectWithResult(this.result);
 }
 
-Upd<Model, Message> init(int start, {Cmd<Message> effect}) =>
-    new Upd(new Model(counter: start, effect: effect));
+Upd<Model, Message> init(
+  int start, {
+  Cmd<Message> effect,
+  Key incrementBtnKey,
+  Key decrementBtnKey,
+}) =>
+    new Upd(new Model(
+      counter: start,
+      effect: effect,
+      incrementBtnKey: incrementBtnKey,
+      decrementBtnKey: decrementBtnKey,
+    ));
 
 Upd<Model, Message> update(Message msg, Model model) {
   if (msg is Increment) {
@@ -57,11 +78,11 @@ Widget view(BuildContext ctx, Dispatch<Message> d, Model m) {
           child: new Row(
         children: <Widget>[
           new RaisedButton(
-              key: incrementBtnKey,
+              key: m.incrementBtnKey ?? incrementBtnKey,
               onPressed: () => d(new Increment()),
               child: new Text("increment")),
           new RaisedButton(
-            key: decrementBtnKey,
+            key: m.decrementBtnKey ?? decrementBtnKey,
             onPressed: () => d(new Decrement()),
             child: new Text("decrement"),
           ),

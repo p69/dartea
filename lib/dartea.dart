@@ -9,6 +9,7 @@ import 'package:collection/collection.dart';
 part 'src/types.dart';
 part 'src/cmd.dart';
 part 'src/widget.dart';
+part 'src/messages_bus.dart';
 
 /// Container object for applcation's functions
 /// [init] - creates inital state of a [TModel] type
@@ -75,7 +76,28 @@ class Program<TModel, TMsg, TSub> {
   }
 
   ///Create widget which could be inserted into Flutter application
-  Widget build({Key key}) {
-    return new DarteaWidget(this, key: key);
+  Widget build({Key key, bool withMessagesBus = false}) {
+    return _DarteaWrapper(
+      key: key,
+      program: this,
+      withMessagesBus: withMessagesBus,
+    );
+  }
+}
+
+class _DarteaWrapper<TModel, TMsg, TSub> extends StatelessWidget {
+  final Program<TModel, TMsg, TSub> program;
+  final bool withMessagesBus;
+
+  const _DarteaWrapper({Key key, this.program, this.withMessagesBus = false})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DarteaWidget(
+      program,
+      busDispatch: DarteaMessagesBus.dispatchOf(context),
+      busStream: withMessagesBus ? DarteaMessagesBus.streamOf(context) : null,
+    );
   }
 }
