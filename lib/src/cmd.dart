@@ -2,7 +2,7 @@ part of dartea;
 
 /// Class for contorlling side-effetcs.
 class Cmd<TMsg> extends DelegatingList<Effect<TMsg>> {
-  Cmd(List<Effect<TMsg>> base) : super(base);
+  const Cmd(List<Effect<TMsg>> base) : super(base);
   Cmd.ofMsg(TMsg msg) : super([(dispatch) => dispatch(msg)]);
   Cmd.ofEffect(Effect<TMsg> sub) : super([sub]);
   const Cmd.none() : super(const []);
