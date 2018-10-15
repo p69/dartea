@@ -34,32 +34,34 @@ class Program<TModel, TMsg, TSub> {
   final Subscribe<TModel, TMsg, TSub> sub;
   final LifeCycleUpdate<TModel, TMsg> lifeCycleUpdate;
 
-  Program(this.init, this.update, this.view,
-      {Subscribe<TModel, TMsg, TSub> subscription,
-      LifeCycleUpdate<TModel, TMsg> lifeCycleUpd,
-      OnError onError})
-      : this.onError =
+  Program({
+    @required this.init,
+    @required this.update,
+    @required this.view,
+    Subscribe<TModel, TMsg, TSub> subscription,
+    LifeCycleUpdate<TModel, TMsg> lifeCycleUpd,
+    OnError onError,
+  })  : this.onError =
             onError ?? ((s, e) => debugPrint('Dartea program error: $e\n$s')),
-        this.sub = subscription ?? ((_, __, ___) => null),
-        this.lifeCycleUpdate =
-            lifeCycleUpd != null ? lifeCycleUpd : ((_, __) => null);
+        this.sub = subscription ?? emptySub<TModel, TMsg>(),
+        this.lifeCycleUpdate = lifeCycleUpd ?? emptyLifecycleUpdate<TModel, TMsg>();
 
   ///Wrap all functions with [debugPrint]
   Program<TModel, TMsg, TSub> withDebugTrace() {
     return Program(
-        () {
+        init: () {
           debugPrint('Dartea program init');
           final res = init();
           debugPrint('Dartea program inited: ${res.model}');
           return res;
         },
-        (msg, m) {
+        update: (msg, m) {
           debugPrint('Dartea handle message $msg. Current state is $m');
           final res = update(msg, m);
           debugPrint('Dartea updated state is ${res.model}');
           return res;
         },
-        view,
+        view: view,
         subscription: (s, d, m) {
           debugPrint('Dartea subscribe current sub:$s, model:$m');
           final res = sub(s, d, m);
@@ -77,11 +79,49 @@ class Program<TModel, TMsg, TSub> {
 
   ///Create widget which could be inserted into Flutter application
   Widget build({Key key, bool withMessagesBus = false}) {
-    return _DarteaWrapper(
+    return _DarteaWrapper<TModel, TMsg, TSub>(
       key: key,
       program: this,
       withMessagesBus: withMessagesBus,
     );
+  }
+}
+
+class ProgramWidget<TModel, TMsg, TSub> extends StatelessWidget {
+  final Init<TModel, TMsg> init;
+  final Update<TModel, TMsg> update;
+  final View<TModel, TMsg> view;
+  final OnError onError;
+  final Subscribe<TModel, TMsg, TSub> sub;
+  final LifeCycleUpdate<TModel, TMsg> lifeCycleUpdate;
+  final bool withMessagesBus;
+  final bool withDebugTrace;
+
+  const ProgramWidget({
+    Key key,
+    this.init,
+    this.update,
+    this.view,
+    this.onError,
+    this.sub,
+    this.lifeCycleUpdate,
+    this.withMessagesBus = false,
+    this.withDebugTrace = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var program = Program(
+            init: init,
+            update: update,
+            view: view,
+            onError: onError,
+            lifeCycleUpd: lifeCycleUpdate,
+            subscription: sub);
+    if (withDebugTrace) {
+      program = program.withDebugTrace();
+    }
+    return program.build(withMessagesBus: withMessagesBus);
   }
 }
 

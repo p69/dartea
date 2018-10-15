@@ -24,9 +24,14 @@ typedef Update<TModel, TMsg> = Upd<TModel, TMsg> Function(
 typedef LifeCycleUpdate<TModel, TMsg> = Upd<TModel, TMsg> Function(
     AppLifecycleState appState, TModel model);
 
+LifeCycleUpdate<TModel, TMsg> emptyLifecycleUpdate<TModel, TMsg>() =>
+    (_, __) => null;
+
 /// function for subsrcibing on external sources
 typedef Subscribe<TModel, TMsg, TSubHolder> = TSubHolder Function(
     TSubHolder currentSub, Dispatch<TMsg> dispatch, TModel model);
+
+Subscribe<TModel, TMsg, Null> emptySub<TModel, TMsg>() => (_, __, ___) => null;
 
 /// Simple tuple of Model*Cmds (for init or update functions)
 class Upd<TModel, TMsg> {
