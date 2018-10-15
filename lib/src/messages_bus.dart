@@ -1,6 +1,6 @@
 part of dartea;
 
-typedef BusDispatch = void Function(dynamic msg);
+typedef BusDispatch = void Function(Object msg);
 
 
 class DarteaMessagesBus extends StatefulWidget {
@@ -22,7 +22,7 @@ class DarteaMessagesBus extends StatefulWidget {
     };
   }
 
-  static Stream<dynamic> streamOf(BuildContext context) {
+  static Stream<Object> streamOf(BuildContext context) {
     final _MessagesBusInherited inherited = context.inheritFromWidgetOfExactType(_MessagesBusInherited);
     if (inherited == null) {
       return null;
@@ -37,7 +37,7 @@ class DarteaMessagesBus extends StatefulWidget {
 }
 
 class _DarteaMessagesBusState extends State<DarteaMessagesBus> {
-  final _controller = StreamController<dynamic>(); 
+  final _controller = StreamController<Object>.broadcast(); 
 
   @override
     void dispose() {
@@ -52,7 +52,7 @@ class _DarteaMessagesBusState extends State<DarteaMessagesBus> {
 }
 
 class _MessagesBusInherited extends InheritedWidget {
-  final StreamController controller;
+  final StreamController<Object> controller;
 
   _MessagesBusInherited({this.controller, Key key, @required Widget child})
       : super(key: key, child: child);

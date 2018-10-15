@@ -32,8 +32,9 @@ typedef Subscribe<TModel, TMsg, TSubHolder> = TSubHolder Function(
 class Upd<TModel, TMsg> {
   final TModel model;
   final Cmd<TMsg> effects;
-  final List<dynamic> msgsToBus;
-  Upd(this.model, {this.effects = const Cmd(const []), this.msgsToBus = const[]});
+  final List<Object> msgsToBus;
+  Upd(this.model,
+      {this.effects = const Cmd(const []), this.msgsToBus = const []});
 }
 
 /// The same as [Upd] but with addional messages for communication child with parent
@@ -41,6 +42,9 @@ class UpdChild<TModel, TMsg, TParentMsg> {
   final TModel model;
   final Cmd<TMsg> effects;
   final List<TParentMsg> toParent;
+  final List<Object> msgsToBus;
   UpdChild(this.model,
-      {this.effects = const Cmd(const []), this.toParent = const []});
+      {this.effects = const Cmd(const []),
+      this.msgsToBus = const [],
+      this.toParent = const []});
 }

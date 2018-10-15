@@ -11,12 +11,17 @@ void main() {
     int startVal1 = 0;
     int startVal2 = 100;
     Key incremntKey1 = Key("inc_1");
+    Key incremntToBusKey1 = Key("inc_to_bus_1");
     TestProgram<Model, Message> program1;
     TestProgram<Model, Message> program2;
 
     setUp(() {
       program1 = new TestProgram(
-          () => init(startVal1, incrementBtnKey: incremntKey1), (msg, model) {
+          () => init(
+                startVal1,
+                incrementBtnKey: incremntKey1,
+                incrementToMessagesBusBtnKey: incremntToBusKey1,
+              ), (msg, model) {
         final upd = update(msg, model);
         final toBusMsgs = [Decrement()];
         return Upd(upd.model, effects: upd.effects, msgsToBus: toBusMsgs);
@@ -24,7 +29,8 @@ void main() {
       program2 = TestProgram(() => init(startVal2), update, view);
     });
 
-    testWidgets('update', (WidgetTester tester) async {
+    testWidgets('send messages to bus using update func with cmd',
+        (WidgetTester tester) async {
       program1.run();
       program2.run(enableMsgBus: true);
 
@@ -58,6 +64,36 @@ void main() {
           find.text((startVal1 + incrementsCount).toString()), findsOneWidget);
       expect(
           find.text((startVal2 - incrementsCount).toString()), findsOneWidget);
+    });
+
+    testWidgets('send messages to bus using DarteaMessagesBus.dispatchOf(ctx)',
+        (WidgetTester tester) async {
+      program1.run();
+      program2.run(enableMsgBus: true);
+
+      await tester.pumpWidget(
+          _twoProgramsFrame(program1.programWidget, program2.programWidget));
+
+      var incrementsCount = 10;
+
+      for (int i = 0; i < incrementsCount; i++) {
+        await tester.tap(find.byKey(incremntToBusKey1));
+      }
+
+      await tester.pumpWidget(
+          _twoProgramsFrame(program1.programWidget, program2.programWidget));
+
+      var p2StreamMatcher = new List<Matcher>();
+
+      for (int i = 0; i < incrementsCount; i++) {
+        p2StreamMatcher.add(predicate((Message msg) => msg is Increment));
+      }
+
+      expect(program2.updates, emitsInOrder(p2StreamMatcher));
+      expect(
+          find.text((startVal1).toString()), findsOneWidget);
+      expect(
+          find.text((startVal2 + incrementsCount).toString()), findsOneWidget);
     });
   });
 }

@@ -3,7 +3,7 @@ part of dartea;
 class DarteaWidget<TModel, TMsg, TSub> extends StatefulWidget {
   final Program<TModel, TMsg, TSub> program;  
   final BusDispatch busDispatch;
-  final Stream busStream;
+  final Stream<Object> busStream;
 
   DarteaWidget(this.program, {Key key, this.busDispatch, this.busStream})
       : super(key: key);
@@ -50,7 +50,7 @@ class _DrateaProgramState<TModel, TMsg, TSub>
     Stream<TMsg> msgStream;    
     if (widget.busStream != null) {
       final messagesBusStream =
-          widget.busStream.map((msg) => msg as TMsg).where((x) => x != null);
+          widget.busStream.cast<TMsg>();
       msgStream =
           StreamGroup.merge([_mainLoopController.stream, messagesBusStream]);
     } else {
