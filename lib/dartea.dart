@@ -87,6 +87,10 @@ class Program<TModel, TMsg, TSub> {
   }
 }
 
+
+///Ths widget creates and builds [Program].
+///It could be helpful when you want create Dartea [Program]
+///right from the widget's [build] method
 class ProgramWidget<TModel, TMsg, TSub> extends StatelessWidget {
   final Init<TModel, TMsg> init;
   final Update<TModel, TMsg> update;

@@ -31,7 +31,7 @@ LifeCycleUpdate<TModel, TMsg> emptyLifecycleUpdate<TModel, TMsg>() =>
 typedef Subscribe<TModel, TMsg, TSubHolder> = TSubHolder Function(
     TSubHolder currentSub, Dispatch<TMsg> dispatch, TModel model);
 
-Subscribe<TModel, TMsg, Null> emptySub<TModel, TMsg>() => (_, __, ___) => null;
+Subscribe<TModel, TMsg, void> emptySub<TModel, TMsg>() => (_, __, ___) {};
 
 /// Simple tuple of Model*Cmds (for init or update functions)
 class Upd<TModel, TMsg> {
