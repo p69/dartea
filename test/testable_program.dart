@@ -13,12 +13,12 @@ class TestProgram<TModel, TMsg> {
       View<TModel, TMsg> view,
       {Subscribe<TModel, TMsg, StreamSubscription<TMsg>> subscribe}) {
     this._program = new Program(
-      init: init,
-      update: (msg, m) {
+      init,
+      (msg, m) {
         _updateController.add(msg);
         return update(msg, m);
       },
-      view: (c, d, m) {
+      (c, d, m) {
         _viewController.add(m);
         return view(c, d, m);
       },
@@ -29,9 +29,9 @@ class TestProgram<TModel, TMsg> {
   void withSubscription(
       Subscribe<TModel, TMsg, StreamSubscription<TMsg>> subscribe) {
     _program = new Program(
-        init: _program.init,
-        update: _program.update,
-        view: _program.view,
+        _program.init,
+        _program.update,
+        _program.view,
         subscription: subscribe);
   }
 

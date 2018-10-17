@@ -34,11 +34,11 @@ class Program<TModel, TMsg, TSub> {
   final Subscribe<TModel, TMsg, TSub> sub;
   final LifeCycleUpdate<TModel, TMsg> lifeCycleUpdate;
 
-  Program({
-    @required this.init,
-    @required this.update,
-    @required this.view,
-    Subscribe<TModel, TMsg, TSub> subscription,
+  Program(
+    this.init,
+    this.update,
+    this.view,
+    {Subscribe<TModel, TMsg, TSub> subscription,
     LifeCycleUpdate<TModel, TMsg> lifeCycleUpd,
     OnError onError,
   })  : this.onError =
@@ -49,19 +49,19 @@ class Program<TModel, TMsg, TSub> {
   ///Wrap all functions with [debugPrint]
   Program<TModel, TMsg, TSub> withDebugTrace() {
     return Program(
-        init: () {
+        () {
           debugPrint('Dartea program init');
           final res = init();
           debugPrint('Dartea program inited: ${res.model}');
           return res;
         },
-        update: (msg, m) {
+        (msg, m) {
           debugPrint('Dartea handle message $msg. Current state is $m');
           final res = update(msg, m);
           debugPrint('Dartea updated state is ${res.model}');
           return res;
         },
-        view: view,
+        view,
         subscription: (s, d, m) {
           debugPrint('Dartea subscribe current sub:$s, model:$m');
           final res = sub(s, d, m);
@@ -116,9 +116,9 @@ class ProgramWidget<TModel, TMsg, TSub> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var program = Program(
-            init: init,
-            update: update,
-            view: view,
+            init,
+            update,
+            view,
             onError: onError,
             lifeCycleUpd: lifeCycleUpdate,
             subscription: sub);

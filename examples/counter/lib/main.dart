@@ -4,9 +4,9 @@ import 'dart:async';
 
 void main() {
   final program = Program<Model, Message, Timer>(
-          init: init, //create app initial state
-          update: update, //handle messages and returns updated state + side effects
-          view: view, //create UI
+          init, //create app initial state
+          update, //handle messages and returns updated state + side effects
+          view, //create UI
           /* optional functions */
           subscription:
               _periodicTimerSubscription, //mange subscription to external source
