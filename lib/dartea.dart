@@ -37,14 +37,15 @@ class Program<TModel, TMsg, TSub> {
   Program(
     this.init,
     this.update,
-    this.view,
-    {Subscribe<TModel, TMsg, TSub> subscription,
+    this.view, {
+    Subscribe<TModel, TMsg, TSub> subscription,
     LifeCycleUpdate<TModel, TMsg> lifeCycleUpd,
     OnError onError,
   })  : this.onError =
             onError ?? ((s, e) => debugPrint('Dartea program error: $e\n$s')),
         this.sub = subscription ?? emptySub<TModel, TMsg>(),
-        this.lifeCycleUpdate = lifeCycleUpd ?? emptyLifecycleUpdate<TModel, TMsg>();
+        this.lifeCycleUpdate =
+            lifeCycleUpd ?? emptyLifecycleUpdate<TModel, TMsg>();
 
   ///Wrap all functions with [debugPrint]
   Program<TModel, TMsg, TSub> withDebugTrace() {
@@ -87,6 +88,12 @@ class Program<TModel, TMsg, TSub> {
   }
 }
 
+/// A [ValueKey] for saving and retrieving model from [PageStorage]
+/// Add it as key for [ProgramWidget] to restore latest model
+/// after widget is removed and added to the tree again.
+class DarteaStorageKey<T> extends ValueKey<T> {  
+  const DarteaStorageKey(T value) : super(value);
+}
 
 ///Ths widget creates and builds [Program].
 ///It could be helpful when you want create Dartea [Program]
@@ -103,9 +110,9 @@ class ProgramWidget<TModel, TMsg, TSub> extends StatelessWidget {
 
   const ProgramWidget({
     Key key,
-    this.init,
-    this.update,
-    this.view,
+    @required this.init,
+    @required this.update,
+    @required this.view,
     this.onError,
     this.sub,
     this.lifeCycleUpdate,
@@ -115,13 +122,25 @@ class ProgramWidget<TModel, TMsg, TSub> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var program = Program(
-            init,
-            update,
-            view,
-            onError: onError,
-            lifeCycleUpd: lifeCycleUpdate,
-            subscription: sub);
+    Program<TModel, TMsg, TSub> program;
+    if (key is DarteaStorageKey) {
+      program = Program(() {
+        final savedModel = PageStorage.of(context)
+            .readState(context, identifier: key) as TModel;
+        if (savedModel != null) {
+          return Upd(savedModel);
+        }
+        return init();
+      }, (msg, model) {
+        final upd = update(msg, model);
+        PageStorage.of(context).writeState(context, upd.model, identifier: key);
+        return upd;
+      }, view,
+          onError: onError, lifeCycleUpd: lifeCycleUpdate, subscription: sub);
+    } else {
+      program = Program(init, update, view,
+          onError: onError, lifeCycleUpd: lifeCycleUpdate, subscription: sub);
+    }
     if (withDebugTrace) {
       program = program.withDebugTrace();
     }
