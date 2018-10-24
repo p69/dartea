@@ -1,0 +1,71 @@
+[
+  { "name": "Dart",
+    "color": "00B4AB"
+  },
+  { "name": "C",
+    "color": "555555"
+  },
+  { "name": "csharp",
+    "display_name": "C#",
+    "color": "178600"
+  },
+  { "name": "cpp",
+    "display_name": "C++",
+    "color": "f34b7d"
+  },
+  { "name": "Clojure",
+    "color": "db5855"
+  },
+  { "name": "D",
+    "color": "ba595e"
+  },
+  { "name": "Elixir",
+    "color": "6e4a7e"
+  },
+  { "name": "Elm",
+    "color": "60B5CC"
+  },
+  { "name": "Erlang",
+    "color": "B83998"
+  },
+  { "name": "fsharp",
+    "display_name": "F#",
+    "color": "b845fc"
+  },
+  { "name": "Go",
+    "color": "375eab"
+  },
+  { "name": "Haskell",
+    "color": "5e5086"
+  },
+  { "name": "Java",
+    "color": "b07219"
+  },
+  { "name": "JavaScript",
+    "color": "f1e05a"
+  },
+  { "name": "Kotlin",
+    "color": "F18E33"
+  },
+  { "name": "Objective-C",
+    "color": "438eff"
+  },
+  { "name": "OCaml",
+    "color": "3be133"
+  },
+  { "name": "PHP",
+    "color": "4F5D95"
+  },
+  { "name": "Python",
+    "color": "3572A5"
+  },
+  { "name": "Scala",
+    "color": "c22d40"
+  },
+  { "name": "Swift",
+    "color": "ffac45"
+  },
+  { "name": "TypeScript",
+    "color": "2b7489"
+  }
+]
