@@ -104,6 +104,8 @@ class _DrateaProgramState<TModel, TMsg, TSub>
     _appLoopSub?.cancel();
     _mainLoopController.close();
     _lifeCycleController.close();
+    program.sub(_appSubHolder, dispatcher, null);
+    _appSubHolder = null;
     super.dispose();
   }
 
