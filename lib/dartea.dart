@@ -9,6 +9,7 @@ import 'package:collection/collection.dart';
 part 'src/types.dart';
 part 'src/cmd.dart';
 part 'src/widget.dart';
+part 'src/messages_bus.dart';
 
 /// Container object for applcation's functions
 /// [init] - creates inital state of a [TModel] type
@@ -33,15 +34,18 @@ class Program<TModel, TMsg, TSub> {
   final Subscribe<TModel, TMsg, TSub> sub;
   final LifeCycleUpdate<TModel, TMsg> lifeCycleUpdate;
 
-  Program(this.init, this.update, this.view,
-      {Subscribe<TModel, TMsg, TSub> subscription,
-      LifeCycleUpdate<TModel, TMsg> lifeCycleUpd,
-      OnError onError})
-      : this.onError =
+  Program(
+    this.init,
+    this.update,
+    this.view, {
+    Subscribe<TModel, TMsg, TSub> subscription,
+    LifeCycleUpdate<TModel, TMsg> lifeCycleUpd,
+    OnError onError,
+  })  : this.onError =
             onError ?? ((s, e) => debugPrint('Dartea program error: $e\n$s')),
-        this.sub = subscription ?? ((_, __, ___) => null),
+        this.sub = subscription ?? emptySub<TModel, TMsg>(),
         this.lifeCycleUpdate =
-            lifeCycleUpd != null ? lifeCycleUpd : ((_, __) => null);
+            lifeCycleUpd ?? emptyLifecycleUpdate<TModel, TMsg>();
 
   ///Wrap all functions with [debugPrint]
   Program<TModel, TMsg, TSub> withDebugTrace() {
@@ -75,7 +79,88 @@ class Program<TModel, TMsg, TSub> {
   }
 
   ///Create widget which could be inserted into Flutter application
-  Widget build({Key key}) {
-    return new DarteaWidget(this, key: key);
+  Widget build({Key key, bool withMessagesBus = false}) {
+    return _DarteaWrapper<TModel, TMsg, TSub>(
+      key: key,
+      program: this,
+      withMessagesBus: withMessagesBus,
+    );
+  }
+}
+
+/// A [ValueKey] for saving and retrieving model from [PageStorage]
+/// Add it as key for [ProgramWidget] to restore latest model
+/// after widget is removed and added to the tree again.
+class DarteaStorageKey<T> extends ValueKey<T> {  
+  const DarteaStorageKey(T value) : super(value);
+}
+
+///Ths widget creates and builds [Program].
+///It could be helpful when you want create Dartea [Program]
+///right from the widget's [build] method
+class ProgramWidget<TModel, TMsg, TSub> extends StatelessWidget {
+  final Init<TModel, TMsg> init;
+  final Update<TModel, TMsg> update;
+  final View<TModel, TMsg> view;
+  final OnError onError;
+  final Subscribe<TModel, TMsg, TSub> sub;
+  final LifeCycleUpdate<TModel, TMsg> lifeCycleUpdate;
+  final bool withMessagesBus;
+  final bool withDebugTrace;
+
+  const ProgramWidget({
+    Key key,
+    @required this.init,
+    @required this.update,
+    @required this.view,
+    this.onError,
+    this.sub,
+    this.lifeCycleUpdate,
+    this.withMessagesBus = false,
+    this.withDebugTrace = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Program<TModel, TMsg, TSub> program;
+    if (key is DarteaStorageKey) {
+      program = Program(() {
+        final savedModel = PageStorage.of(context)
+            .readState(context, identifier: key) as TModel;
+        if (savedModel != null) {
+          return Upd(savedModel);
+        }
+        return init();
+      }, (msg, model) {
+        final upd = update(msg, model);
+        PageStorage.of(context).writeState(context, upd.model, identifier: key);
+        return upd;
+      }, view,
+          onError: onError, lifeCycleUpd: lifeCycleUpdate, subscription: sub);
+    } else {
+      program = Program(init, update, view,
+          onError: onError, lifeCycleUpd: lifeCycleUpdate, subscription: sub);
+    }
+    if (withDebugTrace) {
+      program = program.withDebugTrace();
+    }
+    return program.build(withMessagesBus: withMessagesBus);
+  }
+}
+
+class _DarteaWrapper<TModel, TMsg, TSub> extends StatelessWidget {
+  final Program<TModel, TMsg, TSub> program;
+  final bool withMessagesBus;
+
+  const _DarteaWrapper({Key key, this.program, this.withMessagesBus = false})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DarteaWidget(
+      program,
+      busDispatch: DarteaMessagesBus.dispatchOf(context),
+      busStream: withMessagesBus ? DarteaMessagesBus.streamOf(context) : null,
+    );
   }
 }

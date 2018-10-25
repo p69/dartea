@@ -12,23 +12,34 @@ class TestProgram<TModel, TMsg> {
   TestProgram(Init<TModel, TMsg> init, Update<TModel, TMsg> update,
       View<TModel, TMsg> view,
       {Subscribe<TModel, TMsg, StreamSubscription<TMsg>> subscribe}) {
-    this._program = new Program(init, (msg, m) {
-      _updateController.add(msg);
-      return update(msg, m);
-    }, (c, d, m) {
-      _viewController.add(m);
-      return view(c, d, m);
-    }, subscription: subscribe);
+    this._program = new Program(
+      init,
+      (msg, m) {
+        _updateController.add(msg);
+        return update(msg, m);
+      },
+      (c, d, m) {
+        _viewController.add(m);
+        return view(c, d, m);
+      },
+      subscription: subscribe,
+    );
   }
 
-  void withSubscription(Subscribe<TModel, TMsg, StreamSubscription<TMsg>> subscribe) {
-    _program = new Program(_program.init, _program.update, _program.view,
+  void withSubscription(
+      Subscribe<TModel, TMsg, StreamSubscription<TMsg>> subscribe) {
+    _program = new Program(
+        _program.init,
+        _program.update,
+        _program.view,
         subscription: subscribe);
   }
 
-  void run() {
-    _widget = _program.build();
+  void run({bool enableMsgBus = false}) {
+    _widget = _program.build(withMessagesBus: enableMsgBus);
   }
+
+  Widget get programWidget => _widget;
 
   Widget get frame => new MaterialApp(home: _widget);
 

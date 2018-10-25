@@ -24,18 +24,22 @@ typedef Update<TModel, TMsg> = Upd<TModel, TMsg> Function(
 typedef LifeCycleUpdate<TModel, TMsg> = Upd<TModel, TMsg> Function(
     AppLifecycleState appState, TModel model);
 
+LifeCycleUpdate<TModel, TMsg> emptyLifecycleUpdate<TModel, TMsg>() =>
+    (_, __) => null;
+
 /// function for subsrcibing on external sources
 typedef Subscribe<TModel, TMsg, TSubHolder> = TSubHolder Function(
     TSubHolder currentSub, Dispatch<TMsg> dispatch, TModel model);
 
-/// function for render created widgets tree (typicaly through runApp)
-typedef RenderView = void Function(Widget root);
+Subscribe<TModel, TMsg, void> emptySub<TModel, TMsg>() => (_, __, ___) {};
 
 /// Simple tuple of Model*Cmds (for init or update functions)
 class Upd<TModel, TMsg> {
   final TModel model;
   final Cmd<TMsg> effects;
-  Upd(this.model, {this.effects = const Cmd.none()});
+  final List<Object> msgsToBus;
+  Upd(this.model,
+      {this.effects = const Cmd(const []), this.msgsToBus = const []});
 }
 
 /// The same as [Upd] but with addional messages for communication child with parent
@@ -43,6 +47,9 @@ class UpdChild<TModel, TMsg, TParentMsg> {
   final TModel model;
   final Cmd<TMsg> effects;
   final List<TParentMsg> toParent;
+  final List<Object> msgsToBus;
   UpdChild(this.model,
-      {this.effects = const Cmd.none(), this.toParent = const []});
+      {this.effects = const Cmd(const []),
+      this.msgsToBus = const [],
+      this.toParent = const []});
 }
