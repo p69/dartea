@@ -8,7 +8,7 @@ Widget _view(BuildContext ctx, Dispatch<LanguagesFilterMsg> dispatch,
     onSelected: (_) => dispatch(OnAllLanguagesTappedMsg()),
     backgroundColor: Colors.white,
     selectedColor: Colors.white,
-    selected: model.selectedItem == _allLang,
+    selected: model.selectedItem == Language.All,
   );
 
   final langChips = model.items

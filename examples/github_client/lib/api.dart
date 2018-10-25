@@ -18,7 +18,7 @@ final _client = http.Client();
 ///Function for fetching trending repositories list
 Future<SearchResult> fetchTrendingRepos({Language forLanguage, TrendingPeriod forPeriod = TrendingPeriod.weekly,}) async {
   final response = await _client.get(
-    _trendingUrl(forPeriod, forLanguage),
+    _trendingUrl(forPeriod, forLanguage == Language.All ? null : forLanguage),
   );
   if (response.statusCode == 200) {
     return SearchResult.fromJson(json.decode(response.body));
@@ -226,4 +226,6 @@ class Language {
       color: int.parse('ff' + json['color'], radix: 16),
     );
   }
+
+  static const All = Language(name: 'all', displayName: 'all', color: 0xFFFFFFFF);
 }

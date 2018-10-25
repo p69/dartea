@@ -23,16 +23,17 @@ Upd<LanguagesFilterModel, LanguagesFilterMsg> _update(
   }
   if (msg is OnAllLanguagesTappedMsg) {
     return Upd(
-      model.copyWith(selectedItem: _allLang),
+      model.copyWith(selectedItem: Language.All),
       effects: Cmd.ofAction(router.back),
-      msgsToBus: [OnLanguageFilterChanged(null)],
+      msgsToBus: [OnLanguageFilterChanged(Language.All)],
     );
   }
   if (msg is OnLanguagesTapped) {
+    final selected = model.selectedItem == msg.lang ? Language.All : msg.lang;
     return Upd(
-      model.copyWith(selectedItem: model.selectedItem == msg.lang ? _allLang : msg.lang),
+      model.copyWith(selectedItem: selected),
       effects: Cmd.ofAction(router.back),
-      msgsToBus: [OnLanguageFilterChanged(model.selectedItem == msg.lang ? null : msg.lang)],
+      msgsToBus: [OnLanguageFilterChanged(selected)],
     );
   }
   if (msg is OnPeriodTapped) {

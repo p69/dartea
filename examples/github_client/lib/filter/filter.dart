@@ -29,8 +29,6 @@ class LanguagesFilterWidget extends StatelessWidget {
 
 /// **** Model **** ///
 
-final _allLang = Language(name: 'all', displayName: 'all', color: 0xFFFFFFFF);
-
 class LanguagesFilterModel {
   final List<Language> items;
   final Language selectedItem;
@@ -39,7 +37,7 @@ class LanguagesFilterModel {
   LanguagesFilterModel({this.items, this.selectedItem, this.selectedPeriod});
 
   factory LanguagesFilterModel.init() => LanguagesFilterModel(
-      items: [], selectedItem: _allLang, selectedPeriod: TrendingPeriod.weekly);
+      items: [], selectedItem: Language.All, selectedPeriod: TrendingPeriod.weekly);
 
   LanguagesFilterModel copyWith(
       {List<Language> items,
