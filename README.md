@@ -279,7 +279,7 @@ Widget _view(BuildContext ctx, Dispatch<HomeMsg> dispatch, HomeModel model) {
 }
 ```
 Here we create new `ProgramWidget` when tab is switched, but `model` for each tab is saved and restored automatically and we do not lose UI state.
-See full example of this approach in [GitHub client exxample](/examples/github_client/)
+See full example of this approach in [GitHub client example](/examples/github_client/)
 Using common messages bus and auto-save\restore mechanism helps us to compose loosely coupled components `ProgramWidget`. Communication protocol is described via `messages`. It reduces boilerplate code, removes strong connections. But at the same time it creates implicit connections between components. I suggest to use this approach when components are not connected logically, for example filter-component and content-component, tabs. 
 
 ## Sample apps
