@@ -94,6 +94,10 @@ Upd<Model, Message> update(Message msg, Model model) {
 const _timeout = const Duration(seconds: 1);
 Timer _periodicTimerSubscription(
     Timer currentTimer, Dispatch<Message> dispatch, Model model) {
+  if (model == null) {
+    currentTimer?.cancel();
+    return null;
+  }
   if (model.autoIncrement) {
     if (currentTimer == null) {
       return Timer.periodic(_timeout, (_) => dispatch(Increment()));
