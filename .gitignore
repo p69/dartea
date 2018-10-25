@@ -12,5 +12,9 @@ pubspec.lock
 *.iml
 /coverage/
 *.log
-android/
-ios/
+android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+android/local.properties
+ios/Flutter/Generated.xcconfig
+ios/Runner/GeneratedPluginRegistrant.h
+ios/Runner/GeneratedPluginRegistrant.m
+examples/github_client/android/gradle/wrapper/gradle-wrapper.properties
