@@ -1,6 +1,9 @@
 # github_client
 
-Example of simple GitHub client using Dartea
+Example of simple GitHub client using `Dartea`
+
+![trending](github_trending.gif)
+![search](github_search.gif)
 
 ## Getting Started
 
