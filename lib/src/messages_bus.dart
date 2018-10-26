@@ -2,7 +2,6 @@ part of dartea;
 
 typedef BusDispatch = void Function(Object msg);
 
-
 class DarteaMessagesBus extends StatefulWidget {
   final Widget child;
   const DarteaMessagesBus({
@@ -11,7 +10,8 @@ class DarteaMessagesBus extends StatefulWidget {
   }) : super(key: key);
 
   static BusDispatch dispatchOf(BuildContext context) {
-    final _MessagesBusInherited inherited = context.inheritFromWidgetOfExactType(_MessagesBusInherited);
+    final _MessagesBusInherited inherited =
+        context.inheritFromWidgetOfExactType(_MessagesBusInherited);
     if (inherited == null) {
       return null;
     }
@@ -23,7 +23,8 @@ class DarteaMessagesBus extends StatefulWidget {
   }
 
   static Stream<Object> streamOf(BuildContext context) {
-    final _MessagesBusInherited inherited = context.inheritFromWidgetOfExactType(_MessagesBusInherited);
+    final _MessagesBusInherited inherited =
+        context.inheritFromWidgetOfExactType(_MessagesBusInherited);
     if (inherited == null) {
       return null;
     }
@@ -37,13 +38,13 @@ class DarteaMessagesBus extends StatefulWidget {
 }
 
 class _DarteaMessagesBusState extends State<DarteaMessagesBus> {
-  final _controller = StreamController<Object>.broadcast(); 
+  final _controller = StreamController<Object>.broadcast();
 
   @override
-    void dispose() {
-      super.dispose();
-      _controller.close();      
-    }
+  void dispose() {
+    super.dispose();
+    _controller.close();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +57,7 @@ class _MessagesBusInherited extends InheritedWidget {
 
   _MessagesBusInherited({this.controller, Key key, @required Widget child})
       : super(key: key, child: child);
-  
+
   @override
-  bool updateShouldNotify(InheritedWidget oldWidget) => false;  
+  bool updateShouldNotify(InheritedWidget oldWidget) => false;
 }
