@@ -61,3 +61,15 @@ class _MessagesBusInherited extends InheritedWidget {
   @override
   bool updateShouldNotify(InheritedWidget oldWidget) => false;
 }
+
+class OfExactTypeStreamTransformer<T> extends StreamTransformerBase<Object, T> {
+  @override
+  Stream<T> bind(Stream<Object> stream) {
+    return stream.map<T>((obj) {
+      if (obj is T) {
+        return obj;
+      }
+      return null;
+    });
+  }
+}

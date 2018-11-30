@@ -49,7 +49,7 @@ class _DrateaProgramState<TModel, TMsg, TSub>
 
     Stream<TMsg> msgStream;
     if (widget.busStream != null) {
-      final messagesBusStream = widget.busStream.cast<TMsg>();
+      final messagesBusStream = widget.busStream.transform(OfExactTypeStreamTransformer<TMsg>());
       msgStream =
           StreamGroup.merge([_mainLoopController.stream, messagesBusStream]);
     } else {
