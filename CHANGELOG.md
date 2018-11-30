@@ -1,3 +1,6 @@
+## [0.6.1] - 30.11.2018
+* Fix issue when `DarteaMessagesBus` emmits error because wrong type of events was dispatched. 
+
 ## [0.6.0] - 25.10.2018
 * Multi-program application support (see `ProgramWidget` and [Github client example](examples/github_client)).
 * Communication between programs using `DarteaMessagesBus` (see [Github client example](examples/github_client))
