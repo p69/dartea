@@ -9,15 +9,15 @@ class Cmd<TMsg> extends DelegatingList<Effect<TMsg>> {
 
   static Cmd<TMsg> ofAction<TMsg>(void action(),
       {TMsg onSuccess(), TMsg onError(Exception e)}) {
-    return new Cmd.ofEffect((Dispatch<TMsg> disptach) async {
+    return new Cmd.ofEffect((Dispatch<TMsg> dispatch) async {
       try {
         action();
         if (onSuccess != null) {
-          disptach(onSuccess());
+          dispatch(onSuccess());
         }
       } on Exception catch (e) {
         if (onError != null) {
-          disptach(onError(e));
+          dispatch(onError(e));
         }
       }
     });
@@ -25,15 +25,15 @@ class Cmd<TMsg> extends DelegatingList<Effect<TMsg>> {
 
   static Cmd<TMsg> ofAsyncAction<TMsg>(Future action(),
       {TMsg onSuccess(), TMsg onError(Exception e)}) {
-    return new Cmd.ofEffect((disptach) async {
+    return new Cmd.ofEffect((dispatch) async {
       try {
         await action();
         if (onSuccess != null) {
-          disptach(onSuccess());
+          dispatch(onSuccess());
         }
       } on Exception catch (e) {
         if (onError != null) {
-          disptach(onError(e));
+          dispatch(onError(e));
         }
       }
     });
@@ -41,13 +41,13 @@ class Cmd<TMsg> extends DelegatingList<Effect<TMsg>> {
 
   static Cmd<TMsg> ofFunc<TResult, TMsg>(TResult func(),
       {@required TMsg onSuccess(TResult r), TMsg onError(Exception e)}) {
-    return new Cmd.ofEffect((disptach) {
+    return new Cmd.ofEffect((dispatch) {
       try {
         var result = func();
-        disptach(onSuccess(result));
+        dispatch(onSuccess(result));
       } on Exception catch (ex) {
         if (onError != null) {
-          disptach(onError(ex));
+          dispatch(onError(ex));
         }
       }
     });
@@ -55,13 +55,13 @@ class Cmd<TMsg> extends DelegatingList<Effect<TMsg>> {
 
   static Cmd<TMsg> ofAsyncFunc<TResult, TMsg>(Future<TResult> func(),
       {@required TMsg onSuccess(TResult r), TMsg onError(Exception e)}) {
-    return new Cmd.ofEffect((disptach) async {
+    return new Cmd.ofEffect((dispatch) async {
       try {
         var result = await func();
-        disptach(onSuccess(result));
+        dispatch(onSuccess(result));
       } on Exception catch (ex) {
         if (onError != null) {
-          disptach(onError(ex));
+          dispatch(onError(ex));
         }
       }
     });

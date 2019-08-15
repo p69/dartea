@@ -10,10 +10,10 @@ class DarteaWidget<TModel, TMsg, TSub> extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() =>
-      new _DrateaProgramState<TModel, TMsg, TSub>();
+      new _DarteaProgramState<TModel, TMsg, TSub>();
 }
 
-class _DrateaProgramState<TModel, TMsg, TSub>
+class _DarteaProgramState<TModel, TMsg, TSub>
     extends State<DarteaWidget<TModel, TMsg, TSub>>
     with WidgetsBindingObserver {
   TModel _currentModel;
