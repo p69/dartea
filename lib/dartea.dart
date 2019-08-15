@@ -91,7 +91,7 @@ class Program<TModel, TMsg, TSub> {
 /// A [ValueKey] for saving and retrieving model from [PageStorage]
 /// Add it as key for [ProgramWidget] to restore latest model
 /// after widget is removed and added to the tree again.
-class DarteaStorageKey<T> extends ValueKey<T> {  
+class DarteaStorageKey<T> extends ValueKey<T> {
   const DarteaStorageKey(T value) : super(value);
 }
 

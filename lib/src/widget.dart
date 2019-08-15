@@ -1,7 +1,7 @@
 part of dartea;
 
 class DarteaWidget<TModel, TMsg, TSub> extends StatefulWidget {
-  final Program<TModel, TMsg, TSub> program;  
+  final Program<TModel, TMsg, TSub> program;
   final BusDispatch busDispatch;
   final Stream<Object> busStream;
 
@@ -10,10 +10,10 @@ class DarteaWidget<TModel, TMsg, TSub> extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() =>
-      new _DrateaProgramState<TModel, TMsg, TSub>();
+      new _DarteaProgramState<TModel, TMsg, TSub>();
 }
 
-class _DrateaProgramState<TModel, TMsg, TSub>
+class _DarteaProgramState<TModel, TMsg, TSub>
     extends State<DarteaWidget<TModel, TMsg, TSub>>
     with WidgetsBindingObserver {
   TModel _currentModel;
@@ -29,7 +29,7 @@ class _DrateaProgramState<TModel, TMsg, TSub>
         }
       };
 
-  Program<TModel, TMsg, TSub> get program => widget.program;  
+  Program<TModel, TMsg, TSub> get program => widget.program;
 
   @override
   void initState() {
@@ -47,10 +47,9 @@ class _DrateaProgramState<TModel, TMsg, TSub>
             newModel != null ? program.lifeCycleUpdate(x, newModel) : null)
         .where((x) => x != null);
 
-    Stream<TMsg> msgStream;    
+    Stream<TMsg> msgStream;
     if (widget.busStream != null) {
-      final messagesBusStream =
-          widget.busStream.cast<TMsg>();
+      final messagesBusStream = widget.busStream.transform(OfExactTypeStreamTransformer<TMsg>());
       msgStream =
           StreamGroup.merge([_mainLoopController.stream, messagesBusStream]);
     } else {
@@ -84,7 +83,6 @@ class _DrateaProgramState<TModel, TMsg, TSub>
         }
       }
     });
-
 
     setState(() {
       _currentModel = newModel;

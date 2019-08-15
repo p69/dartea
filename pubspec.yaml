@@ -1,6 +1,6 @@
 name: dartea
 description: A simple engine to run Model-View-Update (or TEA) apps in Flutter.
-version: 0.5.5
+version: 0.6.1
 author: p69 <shilyagov.p@gmail.com>
 homepage: https://github.com/p69/dartea
 

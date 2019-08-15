@@ -1,3 +1,12 @@
+## [0.6.1] - 30.11.2018
+* Fix issue when `DarteaMessagesBus` emmits error because wrong type of events was dispatched. 
+
+## [0.6.0] - 25.10.2018
+* Multi-program application support (see `ProgramWidget` and [Github client example](examples/github_client)).
+* Communication between programs using `DarteaMessagesBus` (see [Github client example](examples/github_client))
+* Auto save/restore model using `DarteaStorageKey`.
+* Bug fixing.
+
 ## [0.5.5] - 27.07.2018
 * Support Dart2
 * Upgrade `async` package version to 2.0.7
