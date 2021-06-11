@@ -11,7 +11,7 @@ class DarteaMessagesBus extends StatefulWidget {
 
   static BusDispatch dispatchOf(BuildContext context) {
     final _MessagesBusInherited inherited =
-        context.inheritFromWidgetOfExactType(_MessagesBusInherited);
+        context.dependOnInheritedWidgetOfExactType<_MessagesBusInherited>();
     if (inherited == null) {
       return null;
     }
@@ -24,7 +24,7 @@ class DarteaMessagesBus extends StatefulWidget {
 
   static Stream<Object> streamOf(BuildContext context) {
     final _MessagesBusInherited inherited =
-        context.inheritFromWidgetOfExactType(_MessagesBusInherited);
+        context.dependOnInheritedWidgetOfExactType<_MessagesBusInherited>();
     if (inherited == null) {
       return null;
     }
