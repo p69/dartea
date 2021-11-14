@@ -40,7 +40,7 @@ class Model {
   final int counter;
   final bool autoIncrement;
   Model(this.counter, this.autoIncrement);
-  Model copyWith({int counter, bool autoIncrement}) =>
+  Model copyWith({int? counter, bool? autoIncrement}) =>
       Model(counter ?? this.counter, autoIncrement ?? this.autoIncrement);
 
   @override
@@ -92,7 +92,7 @@ Upd<Model, Message> update(Message msg, Model model) {
 
 ///Simple timer for emulating some external events
 const _timeout = const Duration(seconds: 1);
-Timer _periodicTimerSubscription(
+Timer? _periodicTimerSubscription(
     Timer currentTimer, Dispatch<Message> dispatch, Model model) {
   if (model == null) {
     currentTimer?.cancel();
