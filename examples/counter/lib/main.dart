@@ -113,7 +113,7 @@ Upd<Model, Message> lifeCycleUpdate(AppLifecycleState appState, Model model) {
   switch (appState) {
     case AppLifecycleState.inactive:
     case AppLifecycleState.paused:
-    case AppLifecycleState.suspending:
+    case AppLifecycleState.detached:
       return Upd(model.copyWith(autoIncrement: false));
     case AppLifecycleState.resumed:
     default:
@@ -134,7 +134,7 @@ Widget view(BuildContext context, Dispatch<Message> dispatch, Model model) {
         children: <Widget>[
           Text(
             '${model.counter}',
-            style: Theme.of(context).textTheme.display1,
+            style: Theme.of(context).textTheme.headline1,
           ),
           Padding(
             child: RaisedButton.icon(
