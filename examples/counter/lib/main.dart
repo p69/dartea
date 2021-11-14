@@ -137,7 +137,7 @@ Widget view(BuildContext context, Dispatch<Message> dispatch, Model model) {
             style: Theme.of(context).textTheme.headline1,
           ),
           Padding(
-            child: RaisedButton.icon(
+            child: ElevatedButton.icon(
               label: Text('Increment'),
               icon: Icon(Icons.add),
               onPressed:
@@ -145,7 +145,7 @@ Widget view(BuildContext context, Dispatch<Message> dispatch, Model model) {
             ),
             padding: EdgeInsets.all(5.0),
           ),
-          RaisedButton.icon(
+          ElevatedButton.icon(
             label: Text('Decrement'),
             icon: Icon(Icons.remove),
             onPressed: model.autoIncrement ? null : () => dispatch(Decrement()),
