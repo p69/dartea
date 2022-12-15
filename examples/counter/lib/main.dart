@@ -40,7 +40,7 @@ class Model {
   final int counter;
   final bool autoIncrement;
   Model(this.counter, this.autoIncrement);
-  Model copyWith({int counter, bool autoIncrement}) =>
+  Model copyWith({int? counter, bool? autoIncrement}) =>
       Model(counter ?? this.counter, autoIncrement ?? this.autoIncrement);
 
   @override
@@ -92,7 +92,7 @@ Upd<Model, Message> update(Message msg, Model model) {
 
 ///Simple timer for emulating some external events
 const _timeout = const Duration(seconds: 1);
-Timer _periodicTimerSubscription(
+Timer? _periodicTimerSubscription(
     Timer currentTimer, Dispatch<Message> dispatch, Model model) {
   if (model == null) {
     currentTimer?.cancel();
@@ -113,7 +113,7 @@ Upd<Model, Message> lifeCycleUpdate(AppLifecycleState appState, Model model) {
   switch (appState) {
     case AppLifecycleState.inactive:
     case AppLifecycleState.paused:
-    case AppLifecycleState.suspending:
+    case AppLifecycleState.detached:
       return Upd(model.copyWith(autoIncrement: false));
     case AppLifecycleState.resumed:
     default:
@@ -134,10 +134,10 @@ Widget view(BuildContext context, Dispatch<Message> dispatch, Model model) {
         children: <Widget>[
           Text(
             '${model.counter}',
-            style: Theme.of(context).textTheme.display1,
+            style: Theme.of(context).textTheme.headline1,
           ),
           Padding(
-            child: RaisedButton.icon(
+            child: ElevatedButton.icon(
               label: Text('Increment'),
               icon: Icon(Icons.add),
               onPressed:
@@ -145,7 +145,7 @@ Widget view(BuildContext context, Dispatch<Message> dispatch, Model model) {
             ),
             padding: EdgeInsets.all(5.0),
           ),
-          RaisedButton.icon(
+          ElevatedButton.icon(
             label: Text('Decrement'),
             icon: Icon(Icons.remove),
             onPressed: model.autoIncrement ? null : () => dispatch(Decrement()),
